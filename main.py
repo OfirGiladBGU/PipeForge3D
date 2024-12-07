@@ -2,28 +2,26 @@ import random
 from collections import deque
 import networkx as nx
 import matplotlib.pyplot as plt
-from enum import Enum
-
-class Connections(Enum):
-    Coupler = 1
-    Elbow = 2
-    Tee = 3
-    Cross = 4
-    AllDirections = 5
 
 
 class GraphGenerator:
     def __init__(self):
         # Parameters
+        self.available_num_of_connections = [2, 3, 4, 5, 6]
+        self.num_of_connections_distribution = [0.5, 0.2, 0.1, 0.15, 0.05]
         self.connection_types = ["x", "-x", "y", "-y", "z", "-z"]
         self.nodes_distance = 1
 
     #####################
     # Utility functions #
     #####################
-    @staticmethod
-    def get_random_num_of_connections(): # TODO: change to a more realistic distribution
-        return random.randint(2, 6)
+    def get_random_num_of_connections(self):
+        num_of_connections = random.choices(
+            population=self.available_num_of_connections,
+            weights=self.num_of_connections_distribution,
+            k=1
+        )
+        return num_of_connections[0]
 
     def get_opposite_connection_type(self, connection_type: str):
         if connection_type not in self.connection_types:
