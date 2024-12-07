@@ -21,9 +21,9 @@ def get_random_num_of_connections(): # TODO: change to a more realistic distribu
     return random.randint(2, 6)
 
 
-def get_random_new_connection_types(num_of_connections,
-                                    active_connections,
-                                    invalid_connections):
+def get_random_new_connection_types(num_of_connections: int,
+                                    active_connections: list,
+                                    invalid_connections: list):
     selectable_connection = list(set(CONNECTION_TYPES) - set(active_connections) - set(invalid_connections))
     num_of_choices_available = num_of_connections - len(active_connections)
 
@@ -37,7 +37,7 @@ def get_random_new_connection_types(num_of_connections,
     return new_connection_types
 
 
-def get_connection_type_node_position(node_position, connection_type):
+def get_connection_type_node_position(node_position: tuple, connection_type: str):
     if connection_type == "x":
         return node_position[0] + NODES_DISTANCE, node_position[1], node_position[2]
     elif connection_type == "-x":
@@ -54,7 +54,7 @@ def get_connection_type_node_position(node_position, connection_type):
         raise ValueError(f"Invalid connection type: {connection_type}")
 
 
-def get_opposite_connection_type(connection_type):
+def get_opposite_connection_type(connection_type: str):
     if connection_type == "x":
         return "-x"
     elif connection_type == "-x":
@@ -71,7 +71,7 @@ def get_opposite_connection_type(connection_type):
         raise ValueError(f"Invalid connection type: {connection_type}")
 
 
-def get_node_active_and_invalid_connections(node_position, nodes_data, position_to_node_map):
+def get_node_active_and_invalid_connections(node_position: tuple, nodes_data: dict, position_to_node_map: dict):
     active_connections = []
     invalid_connections = []
 
@@ -91,7 +91,7 @@ def get_node_active_and_invalid_connections(node_position, nodes_data, position_
     return active_connections, invalid_connections
 
 
-def generate_random_3d_nodes_structure(num_nodes):
+def generate_random_3d_nodes_structure(num_nodes: int):
     nodes_data = {}
     position_to_node_map = {}
 
@@ -141,14 +141,12 @@ def generate_random_3d_nodes_structure(num_nodes):
     return nodes_data, position_to_node_map
 
 
-def generate_graph_3d(nodes_data, position_to_node_map):
+def generate_graph_3d(nodes_data: dict, position_to_node_map: dict):
     G = nx.Graph()
-    positions = {}
 
     # Add nodes
     for node_idx, node_data in nodes_data.items():
-        G.add_node(node_idx)
-        positions[node_idx] = node_data["position"]
+        G.add_node(node_idx, position=node_data["position"])
 
     # Add edges
     for node_idx, node_data in nodes_data.items():
@@ -159,17 +157,18 @@ def generate_graph_3d(nodes_data, position_to_node_map):
             if neighbor_node_idx != -1:
                 G.add_edge(node_idx, neighbor_node_idx)
 
-    return G, positions
+    return G
 
 
-def plot_graph_3d(G, positions):
+def plot_graph_3d(G: nx.Graph):
     """
     Plot the 3D graph using matplotlib and display connections.
 
     Parameters:
         G (networkx.Graph): A graph object.
-        positions (dict): A dictionary mapping nodes to 3D positions.
     """
+    positions = nx.get_node_attributes(G, "position")
+
     fig = plt.figure()
     ax = fig.add_subplot(111, projection="3d")
 
@@ -188,13 +187,15 @@ def plot_graph_3d(G, positions):
     plt.show()
 
 
-# Parameters
-num_nodes = 20
+def main():
+    # Parameters
+    num_nodes = 20
 
-# Generate and plot the graph
-nodes_data, position_to_node_map = generate_random_3d_nodes_structure(num_nodes=num_nodes)
-G, positions = generate_graph_3d(nodes_data=nodes_data, position_to_node_map=position_to_node_map)
-plot_graph_3d(G, positions)
+    # Generate and plot the graph
+    nodes_data, position_to_node_map = generate_random_3d_nodes_structure(num_nodes=num_nodes)
+    G = generate_graph_3d(nodes_data=nodes_data, position_to_node_map=position_to_node_map)
+    plot_graph_3d(G)
 
-# if __name__ == '__main__':
-#     pass
+
+if __name__ == '__main__':
+    main()
