@@ -5,10 +5,9 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from enum import Enum
 
-from networkx.classes import neighbors
 
 CONNECTION_TYPES = ["x", "-x", "y", "-y", "z", "-z"]
-
+NODES_DISTANCE = 1
 
 class Connections(Enum):
     Coupler = 1
@@ -40,17 +39,17 @@ def get_random_new_connection_types(num_of_connections,
 
 def get_connection_type_node_position(node_position, connection_type):
     if connection_type == "x":
-        return node_position[0] + 1, node_position[1], node_position[2]
+        return node_position[0] + NODES_DISTANCE, node_position[1], node_position[2]
     elif connection_type == "-x":
-        return node_position[0] - 1, node_position[1], node_position[2]
+        return node_position[0] - NODES_DISTANCE, node_position[1], node_position[2]
     elif connection_type == "y":
-        return node_position[0], node_position[1] + 1, node_position[2]
+        return node_position[0], node_position[1] + NODES_DISTANCE, node_position[2]
     elif connection_type == "-y":
-        return node_position[0], node_position[1] - 1, node_position[2]
+        return node_position[0], node_position[1] - NODES_DISTANCE, node_position[2]
     elif connection_type == "z":
-        return node_position[0], node_position[1], node_position[2] + 1
+        return node_position[0], node_position[1], node_position[2] + NODES_DISTANCE
     elif connection_type == "-z":
-        return node_position[0], node_position[1], node_position[2] - 1
+        return node_position[0], node_position[1], node_position[2] - NODES_DISTANCE
     else:
         raise ValueError(f"Invalid connection type: {connection_type}")
 
@@ -92,8 +91,7 @@ def get_node_active_and_invalid_connections(node_position, nodes_data, position_
     return active_connections, invalid_connections
 
 
-def generate_random_graph_3d(num_nodes):
-    # G = nx.Graph()
+def generate_random_3d_nodes_structure(num_nodes):
     nodes_data = {}
     position_to_node_map = {}
 
@@ -140,9 +138,28 @@ def generate_random_graph_3d(num_nodes):
             if new_node_idx == -1:
                 node_positions_queue.append(new_node_position)
 
-    print("Nodes data:")
     return nodes_data, position_to_node_map
-    # return G, positions
+
+
+def generate_graph_3d(nodes_data, position_to_node_map):
+    G = nx.Graph()
+    positions = {}
+
+    # Add nodes
+    for node_idx, node_data in nodes_data.items():
+        G.add_node(node_idx)
+        positions[node_idx] = node_data["position"]
+
+    # Add edges
+    for node_idx, node_data in nodes_data.items():
+        for connection_type in node_data["active_connections"]:
+            neighbor_node_position = get_connection_type_node_position(node_data["position"], connection_type)
+            neighbor_node_idx = position_to_node_map.get(neighbor_node_position, -1)
+
+            if neighbor_node_idx != -1:
+                G.add_edge(node_idx, neighbor_node_idx)
+
+    return G, positions
 
 
 def plot_graph_3d(G, positions):
@@ -166,14 +183,7 @@ def plot_graph_3d(G, positions):
     # Draw nodes and labels
     for node, (x, y, z) in positions.items():
         ax.scatter(x, y, z, c="blue", s=50)
-        ax.text(x, y, z, f"{node}", color="red", fontsize=8)
-
-    # Display edge labels
-    for edge in G.edges():
-        mid_x = (positions[edge[0]][0] + positions[edge[1]][0]) / 2
-        mid_y = (positions[edge[0]][1] + positions[edge[1]][1]) / 2
-        mid_z = (positions[edge[0]][2] + positions[edge[1]][2]) / 2
-        ax.text(mid_x, mid_y, mid_z, f"{edge}", color="green", fontsize=6)
+        ax.text(x, y, z, s=str(node), color="red", fontsize=8)
 
     plt.show()
 
@@ -182,10 +192,9 @@ def plot_graph_3d(G, positions):
 num_nodes = 20
 
 # Generate and plot the graph
-generate_random_graph_3d(num_nodes)
-
-# G, positions = generate_random_graph_3d(num_nodes)
-# plot_graph_3d(G, positions)
+nodes_data, position_to_node_map = generate_random_3d_nodes_structure(num_nodes=num_nodes)
+G, positions = generate_graph_3d(nodes_data=nodes_data, position_to_node_map=position_to_node_map)
+plot_graph_3d(G, positions)
 
 # if __name__ == '__main__':
 #     pass
