@@ -1,6 +1,5 @@
 import random
 from collections import deque
-
 import networkx as nx
 import matplotlib.pyplot as plt
 from enum import Enum
@@ -8,6 +7,7 @@ from enum import Enum
 
 CONNECTION_TYPES = ["x", "-x", "y", "-y", "z", "-z"]
 NODES_DISTANCE = 1
+
 
 class Connections(Enum):
     Coupler = 1
@@ -135,7 +135,7 @@ def generate_random_3d_nodes_structure(num_nodes):
             new_node_idx = position_to_node_map.get(new_node_position, -1)
 
             # Add new node to graph
-            if new_node_idx == -1:
+            if new_node_idx == -1 and new_node_position not in node_positions_queue:
                 node_positions_queue.append(new_node_position)
 
     return nodes_data, position_to_node_map
@@ -182,7 +182,7 @@ def plot_graph_3d(G, positions):
 
     # Draw nodes and labels
     for node, (x, y, z) in positions.items():
-        ax.scatter(x, y, z, c="blue", s=50)
+        ax.scatter(x, y, z, c="blue", s=25)
         ax.text(x, y, z, s=str(node), color="red", fontsize=8)
 
     plt.show()
