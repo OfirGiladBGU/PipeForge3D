@@ -24,14 +24,17 @@ def get_random_num_of_connections(): # TODO: change to a more realistic distribu
 
 def get_random_new_connection_types(num_of_connections,
                                     active_connections,
-                                    invalid_connections): # TODO: handle invalid connections
-    selectable_connection = list(set(CONNECTION_TYPES) - set(active_connections))
+                                    invalid_connections):
+    selectable_connection = list(set(CONNECTION_TYPES) - set(active_connections) - set(invalid_connections))
     num_of_choices_available = num_of_connections - len(active_connections)
 
     if num_of_choices_available <= 0:
         new_connection_types = []
+    elif num_of_choices_available >= len(selectable_connection):
+        new_connection_types = selectable_connection
     else:
-        new_connection_types = random.choices(selectable_connection, k=num_of_choices_available)
+        new_connection_types = random.sample(population=selectable_connection, k=num_of_choices_available)
+
     return new_connection_types
 
 
@@ -89,8 +92,8 @@ def get_node_active_and_invalid_connections(node_position, nodes_data, position_
     return active_connections, invalid_connections
 
 
-def generate_random_graph_3d(num_of_defined_nodes):
-    G = nx.Graph()
+def generate_random_graph_3d(num_nodes):
+    # G = nx.Graph()
     nodes_data = {}
     position_to_node_map = {}
 
@@ -98,7 +101,7 @@ def generate_random_graph_3d(num_of_defined_nodes):
     node_positions_queue = deque()
     node_positions_queue.append(node_position)
 
-    for node_idx in range(num_of_defined_nodes):
+    for node_idx in range(num_nodes):
         if not node_positions_queue:
             break
 
@@ -126,15 +129,19 @@ def generate_random_graph_3d(num_of_defined_nodes):
             "active_connections": active_connections,
             "invalid_connections": invalid_connections
         }
+        position_to_node_map[node_position] = node_idx
 
         # Add new node potions to queue
         for new_connection_type in new_connection_types:
             new_node_position = get_connection_type_node_position(node_position, new_connection_type)
             new_node_idx = position_to_node_map.get(new_node_position, -1)
 
+            # Add new node to graph
             if new_node_idx == -1:
                 node_positions_queue.append(new_node_position)
 
+    print("Nodes data:")
+    return nodes_data, position_to_node_map
     # return G, positions
 
 
@@ -175,8 +182,10 @@ def plot_graph_3d(G, positions):
 num_nodes = 20
 
 # Generate and plot the graph
-G, positions = generate_random_graph_3d(num_nodes)
-plot_graph_3d(G, positions)
+generate_random_graph_3d(num_nodes)
+
+# G, positions = generate_random_graph_3d(num_nodes)
+# plot_graph_3d(G, positions)
 
 # if __name__ == '__main__':
 #     pass
