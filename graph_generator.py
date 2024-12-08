@@ -91,11 +91,11 @@ class GraphGenerator:
         elif num_of_choices_available > num_of_selectable_connections:
             new_connection_types = selectable_connection
 
-        # (Optional) Special case: select between Coupler and Elbow connections
+        # (Optional) Special case: select between Coupler and Elbow connection types
         elif num_of_choices_available == 1 and len(active_connections) == 1:
             opposite_connection = self.get_opposite_connection_type(connection_type=active_connections[0])
 
-            # Check if an opposite connection and different connection are selectable
+            # Check if an opposite connection and at least one other connection are selectable
             # (Coupler and Elbow connection types are selectable)
             if opposite_connection in selectable_connection and num_of_selectable_connections > 1:
                 selected_option = random.choices(
