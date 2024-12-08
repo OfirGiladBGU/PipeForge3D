@@ -8,7 +8,8 @@ class GraphGenerator:
     def __init__(self):
         # Parameters
         self.available_num_of_connections = [2, 3, 4, 5, 6]
-        self.num_of_connections_distribution = [0.5, 0.2, 0.1, 0.15, 0.05]
+        self.num_of_connections_probabilities = [0.5, 0.2, 0.1, 0.15, 0.05]
+        self.coupler_elbow_probabilities = [0.8, 0.2]
         self.connection_types = ["x", "-x", "y", "-y", "z", "-z"]
         self.nodes_distance = 1
 
@@ -18,7 +19,7 @@ class GraphGenerator:
     def get_random_min_num_of_connections(self):
         min_num_of_connections = random.choices(
             population=self.available_num_of_connections,
-            weights=self.num_of_connections_distribution,
+            weights=self.num_of_connections_probabilities,
             k=1
         )
         return min_num_of_connections[0]
@@ -79,12 +80,40 @@ class GraphGenerator:
                                         active_connections: list,
                                         invalid_connections: list) -> list:
         selectable_connection = list(set(self.connection_types) - set(active_connections) - set(invalid_connections))
+        num_of_selectable_connections = len(selectable_connection)
         num_of_choices_available = min_num_of_connections - len(active_connections)
 
+        # Min number of connections reached
         if num_of_choices_available <= 0:
             new_connection_types = []
-        elif num_of_choices_available >= len(selectable_connection):
+
+        # Not enough selectable connections to reach min number of connections
+        elif num_of_choices_available > num_of_selectable_connections:
             new_connection_types = selectable_connection
+
+        # (Optional) Special case: select between Coupler and Elbow connections
+        elif num_of_choices_available == 1 and len(active_connections) == 1:
+            opposite_connection = self.get_opposite_connection_type(connection_type=active_connections[0])
+
+            # Check if an opposite connection and different connection are selectable
+            # (Coupler and Elbow connection types are selectable)
+            if opposite_connection in selectable_connection and num_of_selectable_connections > 1:
+                selected_option = random.choices(
+                    population=["Coupler", "Elbow"],
+                    weights=self.coupler_elbow_probabilities,
+                    k=1
+                )
+                if selected_option[0] == "Coupler":
+                    new_connection_types = [opposite_connection]
+                else:  # Elbow
+                    selectable_connection.remove(opposite_connection)
+                    new_connection_types = random.sample(population=selectable_connection, k=1)
+
+            # Either Coupler or Elbow connection is only selectable
+            else:
+                new_connection_types = random.sample(population=selectable_connection, k=1)
+
+        # Randomly select new connections to reach min number of connections
         else:
             new_connection_types = random.sample(population=selectable_connection, k=num_of_choices_available)
 
