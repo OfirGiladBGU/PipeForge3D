@@ -15,13 +15,13 @@ class GraphGenerator:
     #####################
     # Utility functions #
     #####################
-    def get_random_num_of_connections(self):
-        num_of_connections = random.choices(
+    def get_random_min_num_of_connections(self):
+        min_num_of_connections = random.choices(
             population=self.available_num_of_connections,
             weights=self.num_of_connections_distribution,
             k=1
         )
-        return num_of_connections[0]
+        return min_num_of_connections[0]
 
     def get_opposite_connection_type(self, connection_type: str):
         if connection_type not in self.connection_types:
@@ -75,11 +75,11 @@ class GraphGenerator:
         return active_connections, invalid_connections
 
     def get_random_new_connection_types(self,
-                                        num_of_connections: int,
+                                        min_num_of_connections: int,
                                         active_connections: list,
                                         invalid_connections: list) -> list:
         selectable_connection = list(set(self.connection_types) - set(active_connections) - set(invalid_connections))
-        num_of_choices_available = num_of_connections - len(active_connections)
+        num_of_choices_available = min_num_of_connections - len(active_connections)
 
         if num_of_choices_available <= 0:
             new_connection_types = []
@@ -110,7 +110,7 @@ class GraphGenerator:
 
             # Pop next node in queue
             node_position = node_positions_queue.popleft()
-            num_of_connections = self.get_random_num_of_connections()
+            min_num_of_connections = self.get_random_min_num_of_connections()
             active_connections, invalid_connections = self.get_node_active_and_invalid_connections(
                 node_position=node_position,
                 nodes_data=nodes_data,
@@ -119,7 +119,7 @@ class GraphGenerator:
 
             # Set new connections to the node
             new_connection_types = self.get_random_new_connection_types(
-                num_of_connections=num_of_connections,
+                min_num_of_connections=min_num_of_connections,
                 active_connections=active_connections,
                 invalid_connections=invalid_connections
             )
