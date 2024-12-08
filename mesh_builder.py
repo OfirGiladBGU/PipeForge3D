@@ -15,4 +15,7 @@ class MeshBuilder:
         pass
 
     def build_mesh(self, G: nx.Graph):
-        pass
+        positions = nx.get_node_attributes(G, "position")
+        connections = nx.get_node_attributes(G, "connections")
+
+

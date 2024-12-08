@@ -94,12 +94,14 @@ class GraphGenerator:
     # Building functions #
     ######################
     def generate_random_3d_nodes_structure(self, num_nodes: int):
+        current_num_of_nodes = 0
         nodes_data = {}
         position_to_node_map = {}
 
         node_position = (0, 0, 0)
         node_positions_queue = deque()
         node_positions_queue.append(node_position)
+        current_num_of_nodes += 1
 
         for node_idx in range(num_nodes):
             # Check if there are no more nodes that can be added
@@ -142,10 +144,12 @@ class GraphGenerator:
                 # Prevent adding the same node position twice
                 conditions = [
                     position_to_node_map.get(new_node_position, -1) == -1,
-                    new_node_position not in node_positions_queue
+                    new_node_position not in node_positions_queue,
+                    current_num_of_nodes < num_nodes
                 ]
                 if all(conditions):
                     node_positions_queue.append(new_node_position)
+                    current_num_of_nodes += 1
 
         return nodes_data, position_to_node_map
 
@@ -154,7 +158,7 @@ class GraphGenerator:
 
         # Add nodes
         for node_idx, node_data in nodes_data.items():
-            G.add_node(node_idx, position=node_data["position"])
+            G.add_node(node_idx, position=node_data["position"], connections=node_data["active_connections"])
 
         # Add edges
         for node_idx, node_data in nodes_data.items():
