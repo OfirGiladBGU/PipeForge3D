@@ -1,2 +1,7 @@
 networkx
 matplotlib
+trimesh
+
+# trimesh show
+pyglet
+scipy
