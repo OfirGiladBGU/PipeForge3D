@@ -1,28 +1,28 @@
 from enum import Enum
+import pathlib
+import os
 import networkx as nx
 import trimesh
 from typing import Callable
 
 
-class Connections(Enum):
-    Coupler = 1
-    Elbow = 2
-    Tee = 3
-    Cross = 4
-    FiveWayCross = 5
-    HexagonalFitting = 6
+class ConnectionTypes(Enum):
+    Coupler = "Coupler.obj"
+    Elbow = "Elbow.obj"
+    Tee = "Tee.obj"
+    Cross = "Cross.obj"
+    FiveWayCross = "FiveWayCross.obj"
+    HexagonalFitting = "HexagonalFitting.obj"
 
 
 class MeshBuilder:
     def __init__(self):
-        self.pipe_meshes = {
-            "Coupler": trimesh.load(file_obj="pipes/Coupler.obj"),
-            "Elbow": trimesh.load(file_obj="pipes/Elbow.obj"),
-            "Tee": trimesh.load(file_obj="pipes/Tee.obj"),
-            "Cross": trimesh.load(file_obj="pipes/Cross.obj"),
-            "FiveWayCross": trimesh.load(file_obj="pipes/FiveWayCross.obj"),
-            "HexagonalFitting": trimesh.load(file_obj="pipes/HexagonalFitting.obj")
-        }
+        self.pipe_meshes_path = os.path.join(pathlib.Path(__file__).parent, "pipes")
+        self.pipe_meshes = {}
+        for connection_type in ConnectionTypes:
+            pipe_mesh_path = os.path.join(self.pipe_meshes_path, connection_type.value)
+            self.pipe_meshes[connection_type] = trimesh.load(file_obj=pipe_mesh_path)
+
         self.connections_cases: dict[int, Callable] = {
             2: self.coupler_or_elbow,
             3: self.tee,
@@ -33,21 +33,39 @@ class MeshBuilder:
 
     def coupler_or_elbow(self, position: tuple, connections: list):
         if connections[0].strip("-") == connections[1].strip("-"):
-            return self.pipe_meshes["Coupler"]
+            mesh = self.pipe_meshes[ConnectionTypes.Coupler]
+            position = (position[0] * 1, position[1] * 1, position[2] * 1)
+            mesh.apply_translation(position)
+            return mesh
         else:
-            return self.pipe_meshes["Elbow"]
+            mesh = self.pipe_meshes[ConnectionTypes.Elbow]
+            position = (position[0] * 1, position[1] * 1, position[2] * 1)
+            mesh.apply_translation(position)
+            return mesh
 
     def tee(self, position: tuple, connections: list):
-        return self.pipe_meshes["Tee"]
+        mesh = self.pipe_meshes[ConnectionTypes.Tee]
+        position = (position[0] * 1, position[1] * 1, position[2] * 1)
+        mesh.apply_translation(position)
+        return mesh
 
     def cross(self, position: tuple, connections: list):
-        return self.pipe_meshes["Cross"]
+        mesh = self.pipe_meshes[ConnectionTypes.Cross]
+        position = (position[0] * 1, position[1] * 1, position[2] * 1)
+        mesh.apply_translation(position)
+        return mesh
 
     def five_way_cross(self, position: tuple, connections: list):
-        return self.pipe_meshes["FiveWayCross"]
+        mesh = self.pipe_meshes[ConnectionTypes.FiveWayCross]
+        position = (position[0] * 1, position[1] * 1, position[2] * 1)
+        mesh.apply_translation(position)
+        return mesh
 
     def hexagonal_fitting(self, position: tuple, connections: list):
-        return self.pipe_meshes["HexagonalFitting"]
+        mesh = self.pipe_meshes[ConnectionTypes.HexagonalFitting]
+        position = (position[0] * 1, position[1] * 1, position[2] * 1)
+        mesh.apply_translation(position)
+        return mesh
 
     def build_mesh(self, G: nx.Graph):
         position_dict = nx.get_node_attributes(G, "position")
