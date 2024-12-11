@@ -231,7 +231,10 @@ class GraphGenerator:
         plt.show()
 
 
-def main():
+#########
+# Tests #
+#########
+def tests():
     # Parameters
     num_nodes = 20
 
@@ -243,4 +246,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    tests()

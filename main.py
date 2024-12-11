@@ -14,7 +14,7 @@ def main():
 
     # Build the mesh
     mb = MeshBuilder()
-    mb.build_mesh(G=G)
+    mb.build_mesh(G=G, output_path="output.obj")
 
 
 if __name__ == '__main__':
