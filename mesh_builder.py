@@ -2,6 +2,7 @@ from enum import Enum
 import pathlib
 import os
 import networkx as nx
+import numpy as np
 import trimesh
 from typing import Callable
 
@@ -17,6 +18,7 @@ class ConnectionTypes(Enum):
 
 class MeshBuilder:
     def __init__(self):
+        self.mesh_scale = 66
         self.pipe_meshes_path = os.path.join(pathlib.Path(__file__).parent, "pipes")
         self.pipe_meshes = {}
         for connection_type in ConnectionTypes:
@@ -33,37 +35,37 @@ class MeshBuilder:
 
     def coupler_or_elbow(self, position: tuple, connections: list):
         if connections[0].strip("-") == connections[1].strip("-"):
-            mesh = self.pipe_meshes[ConnectionTypes.Coupler]
-            position = (position[0] * 1, position[1] * 1, position[2] * 1)
+            mesh = self.pipe_meshes[ConnectionTypes.Coupler].copy()
+            position = np.array(position) * self.mesh_scale
             mesh.apply_translation(position)
             return mesh
         else:
-            mesh = self.pipe_meshes[ConnectionTypes.Elbow]
-            position = (position[0] * 1, position[1] * 1, position[2] * 1)
+            mesh = self.pipe_meshes[ConnectionTypes.Elbow].copy()
+            position = np.array(position) * self.mesh_scale
             mesh.apply_translation(position)
             return mesh
 
     def tee(self, position: tuple, connections: list):
-        mesh = self.pipe_meshes[ConnectionTypes.Tee]
-        position = (position[0] * 1, position[1] * 1, position[2] * 1)
+        mesh = self.pipe_meshes[ConnectionTypes.Tee].copy()
+        position = np.array(position) * self.mesh_scale
         mesh.apply_translation(position)
         return mesh
 
     def cross(self, position: tuple, connections: list):
-        mesh = self.pipe_meshes[ConnectionTypes.Cross]
-        position = (position[0] * 1, position[1] * 1, position[2] * 1)
+        mesh = self.pipe_meshes[ConnectionTypes.Cross].copy()
+        position = np.array(position) * self.mesh_scale
         mesh.apply_translation(position)
         return mesh
 
     def five_way_cross(self, position: tuple, connections: list):
-        mesh = self.pipe_meshes[ConnectionTypes.FiveWayCross]
-        position = (position[0] * 1, position[1] * 1, position[2] * 1)
+        mesh = self.pipe_meshes[ConnectionTypes.FiveWayCross].copy()
+        position = np.array(position) * self.mesh_scale
         mesh.apply_translation(position)
         return mesh
 
     def hexagonal_fitting(self, position: tuple, connections: list):
-        mesh = self.pipe_meshes[ConnectionTypes.HexagonalFitting]
-        position = (position[0] * 1, position[1] * 1, position[2] * 1)
+        mesh = self.pipe_meshes[ConnectionTypes.HexagonalFitting].copy()
+        position = np.array(position) * self.mesh_scale
         mesh.apply_translation(position)
         return mesh
 
