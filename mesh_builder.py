@@ -124,38 +124,29 @@ class MeshBuilder:
             # Rotation (In the origin)
             if {"x", "-x", "y"}.issubset(connections):
                 pass
-
             if {"x", "-x", "-y"}.issubset(connections):
                 pass
-
             if {"x", "-x", "z"}.issubset(connections):
                 pass
-
             if {"x", "-x", "-z"}.issubset(connections):
                 pass
 
-            if {"y", "-y", "x"}.issubset(connections):
+            if {"x", "y", "-y"}.issubset(connections):
                 pass
-
-            if {"y", "-y", "-x"}.issubset(connections):
+            if {"-x", "y", "-y"}.issubset(connections):
                 pass
-
             if {"y", "-y", "z"}.issubset(connections):
                 pass
-
             if {"y", "-y", "-z"}.issubset(connections):
                 pass
 
-            if {"z", "-z", "x"}.issubset(connections):
+            if {"x", "z", "-z"}.issubset(connections):
                 pass
-
-            if {"z", "-z", "-x"}.issubset(connections):
+            if {"-x", "z", "-z",}.issubset(connections):
                 pass
-
-            if {"z", "-z", "y"}.issubset(connections):
+            if {"y", "z", "-z"}.issubset(connections):
                 pass
-
-            if {"z", "-z", "-y"}.issubset(connections):
+            if {"-y", "z", "-z"}.issubset(connections):
                 pass
 
         else:  # Three-Way Elbow
@@ -222,11 +213,11 @@ class MeshBuilder:
 
             # Rotation (In the origin)
             if {"x", "-x", "y", "-y"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
             if {"x", "-x", "z", "-z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
             if {"y", "-y", "z", "-z"}.issubset(connections):
-                pass
+                pass  # No need to rotate the cross
 
         # Translation
         self.apply_translation(mesh=mesh, position=position)
@@ -438,6 +429,23 @@ def test_elbow_yz4(gg, output_path):
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
+# Test Cross
+def test_cross_xxyy(gg, output_path):
+    positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0)]
+    active_connection_lists = [["x", "-x", "y", "-y"], ["x", "-x"], ["x", "-x"], ["y", "-y"], ["y", "-y"]]
+    build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+def test_cross_xxzz(gg, output_path):
+    positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, 0, 1), (0, 0, -1)]
+    active_connection_lists = [["x", "-x", "z", "-z"], ["x", "-x"], ["x", "-x"], ["z", "-z"], ["z", "-z"]]
+    build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+def test_cross_yyzz(gg, output_path):
+    positions = [(0, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
+    active_connection_lists = [["y", "-y", "z", "-z"], ["y", "-y"], ["y", "-y"], ["z", "-z"], ["z", "-z"]]
+    build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
 def tests():
     from graph_generator import GraphGenerator
 
@@ -485,6 +493,11 @@ def tests():
     # Test ThreeWayElbow
 
     # Test Cross
+    test_cross_xxyy(gg=gg, output_path=os.path.join(tests_path, "cross_xxyy.obj"))
+
+    test_cross_xxzz(gg=gg, output_path=os.path.join(tests_path, "cross_xxzz.obj"))
+
+    test_cross_yyzz(gg=gg, output_path=os.path.join(tests_path, "cross_yyzz.obj"))
 
     # Test FourWayTee
 
