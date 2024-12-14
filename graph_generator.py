@@ -11,7 +11,6 @@ class GraphGenerator:
         self.num_of_connections_probabilities = [0.5, 0.2, 0.1, 0.15, 0.05]
         self.coupler_elbow_probabilities = [0.8, 0.2]
         self.connection_types = ["x", "-x", "y", "-y", "z", "-z"]
-        self.nodes_distance = 1
 
     #####################
     # Utility functions #
@@ -34,14 +33,15 @@ class GraphGenerator:
             opposite_connection_type = "-" + connection_type
         return opposite_connection_type
 
-    def get_connection_type_node_position(self, node_position: tuple, connection_type: str):
+    @staticmethod
+    def get_connection_type_node_position(node_position: tuple, connection_type: str):
         deltas = {
-            "x": (self.nodes_distance, 0, 0),
-            "-x": (-self.nodes_distance, 0, 0),
-            "y": (0, self.nodes_distance, 0),
-            "-y": (0, -self.nodes_distance, 0),
-            "z": (0, 0, self.nodes_distance),
-            "-z": (0, 0, -self.nodes_distance),
+            "x": (1, 0, 0),
+            "-x": (-1, 0, 0),
+            "y": (0, 1, 0),
+            "-y": (0, -1, 0),
+            "z": (0, 0, 1),
+            "-z": (0, 0, -1),
         }
 
         if connection_type not in deltas:
@@ -50,12 +50,12 @@ class GraphGenerator:
         dx, dy, dz = deltas[connection_type]
         return node_position[0] + dx, node_position[1] + dy, node_position[2] + dz
 
-    def get_node_active_and_invalid_connections(self,
+    def get_node_active_and_invalid_connection_lists(self,
                                                 node_position: tuple,
                                                 nodes_data: dict,
                                                 position_to_node_map: dict) -> tuple:
-        active_connections = []
-        invalid_connections = []
+        active_connection_list = []
+        invalid_connection_list = []
 
         for connection_type in self.connection_types:
             neighbor_node_position = self.get_connection_type_node_position(
@@ -67,21 +67,21 @@ class GraphGenerator:
             if neighbor_node_idx != -1:
                 neighbor_connection_type = self.get_opposite_connection_type(connection_type=connection_type)
 
-                if neighbor_connection_type in nodes_data[neighbor_node_idx]["active_connections"]:
-                    active_connections.append(connection_type)
+                if neighbor_connection_type in nodes_data[neighbor_node_idx]["active_connection_list"]:
+                    active_connection_list.append(connection_type)
 
-                if neighbor_connection_type in nodes_data[neighbor_node_idx]["invalid_connections"]:
-                    invalid_connections.append(connection_type)
+                if neighbor_connection_type in nodes_data[neighbor_node_idx]["invalid_connection_list"]:
+                    invalid_connection_list.append(connection_type)
 
-        return active_connections, invalid_connections
+        return active_connection_list, invalid_connection_list
 
     def get_random_new_connection_types(self,
                                         min_num_of_connections: int,
-                                        active_connections: list,
-                                        invalid_connections: list) -> list:
-        selectable_connection = list(set(self.connection_types) - set(active_connections) - set(invalid_connections))
+                                        active_connection_list: list,
+                                        invalid_connection_list: list) -> list:
+        selectable_connection = list(set(self.connection_types) - set(active_connection_list) - set(invalid_connection_list))
         num_of_selectable_connections = len(selectable_connection)
-        num_of_choices_available = min_num_of_connections - len(active_connections)
+        num_of_choices_available = min_num_of_connections - len(active_connection_list)
 
         # Min number of connections reached
         if num_of_choices_available <= 0:
@@ -92,8 +92,8 @@ class GraphGenerator:
             new_connection_types = selectable_connection
 
         # (Optional) Special case: select between Coupler and Elbow connection types
-        elif num_of_choices_available == 1 and len(active_connections) == 1:
-            opposite_connection = self.get_opposite_connection_type(connection_type=active_connections[0])
+        elif num_of_choices_available == 1 and len(active_connection_list) == 1:
+            opposite_connection = self.get_opposite_connection_type(connection_type=active_connection_list[0])
 
             # Check if an opposite connection and at least one other connection are selectable
             # (Coupler and Elbow connection types are selectable)
@@ -140,7 +140,7 @@ class GraphGenerator:
             # Pop next node in queue
             node_position = node_positions_queue.popleft()
             min_num_of_connections = self.get_random_min_num_of_connections()
-            active_connections, invalid_connections = self.get_node_active_and_invalid_connections(
+            active_connection_list, invalid_connection_list = self.get_node_active_and_invalid_connection_lists(
                 node_position=node_position,
                 nodes_data=nodes_data,
                 position_to_node_map=position_to_node_map
@@ -149,17 +149,17 @@ class GraphGenerator:
             # Set new connections to the node
             new_connection_types = self.get_random_new_connection_types(
                 min_num_of_connections=min_num_of_connections,
-                active_connections=active_connections,
-                invalid_connections=invalid_connections
+                active_connection_list=active_connection_list,
+                invalid_connection_list=invalid_connection_list
             )
 
             # Add node to graph
-            active_connections.extend(new_connection_types)
-            invalid_connections = list(set(self.connection_types) - set(active_connections))
+            active_connection_list.extend(new_connection_types)
+            invalid_connection_list = list(set(self.connection_types) - set(active_connection_list))
             nodes_data[node_idx] = {
                 "position": node_position,
-                "active_connections": active_connections,
-                "invalid_connections": invalid_connections
+                "active_connection_list": active_connection_list,
+                "invalid_connection_list": invalid_connection_list
             }
             position_to_node_map[node_position] = node_idx
 
@@ -183,15 +183,15 @@ class GraphGenerator:
         return nodes_data, position_to_node_map
 
     def generate_graph_3d(self, nodes_data: dict, position_to_node_map: dict) -> nx.Graph:
-        G = nx.Graph()
+        graph = nx.Graph()
 
         # Add nodes
         for node_idx, node_data in nodes_data.items():
-            G.add_node(node_idx, position=node_data["position"], connections=node_data["active_connections"])
+            graph.add_node(node_idx, position=node_data["position"], connections=node_data["active_connection_list"])
 
         # Add edges
         for node_idx, node_data in nodes_data.items():
-            for connection_type in node_data["active_connections"]:
+            for connection_type in node_data["active_connection_list"]:
                 neighbor_node_position = self.get_connection_type_node_position(
                     node_position=node_data["position"],
                     connection_type=connection_type
@@ -199,32 +199,34 @@ class GraphGenerator:
                 neighbor_node_idx = position_to_node_map.get(neighbor_node_position, -1)
 
                 if neighbor_node_idx != -1:
-                    G.add_edge(node_idx, neighbor_node_idx)
+                    graph.add_edge(node_idx, neighbor_node_idx)
 
-        return G
+        return graph
 
     @staticmethod
-    def plot_graph_3d(G: nx.Graph):
+    def plot_graph_3d(graph: nx.Graph, scale: int = 1):
         """
         Plot the 3D graph using matplotlib and display connections.
 
         Parameters:
-            G (networkx.Graph): A graph object.
+            graph (networkx.Graph): A graph object.
+            scale (int): A scale factor for the plot.
         """
-        positions = nx.get_node_attributes(G, "position")
+        positions = nx.get_node_attributes(graph, "position")
 
         fig = plt.figure()
         ax = fig.add_subplot(111, projection="3d")
 
         # Draw edges
-        for edge in G.edges():
-            x = [positions[edge[0]][0], positions[edge[1]][0]]
-            y = [positions[edge[0]][1], positions[edge[1]][1]]
-            z = [positions[edge[0]][2], positions[edge[1]][2]]
+        for edge in graph.edges():
+            x = [positions[edge[0]][0] * scale, positions[edge[1]][0] * scale]
+            y = [positions[edge[0]][1] * scale, positions[edge[1]][1] * scale]
+            z = [positions[edge[0]][2] * scale, positions[edge[1]][2] * scale]
             ax.plot(x, y, z, color="red", linewidth=1)
 
         # Draw nodes and labels
         for node, (x, y, z) in positions.items():
+            x, y, z = x * scale, y * scale, z * scale
             ax.scatter(x, y, z, c="blue", s=25)
             ax.text(x, y, z, s=str(node), color="red", fontsize=8)
 
@@ -237,12 +239,13 @@ class GraphGenerator:
 def tests():
     # Parameters
     num_nodes = 20
+    scale = 1
 
     # Generate and plot the graph
     gg = GraphGenerator()
     nodes_data, position_to_node_map = gg.generate_random_3d_nodes_structure(num_nodes=num_nodes)
-    G = gg.generate_graph_3d(nodes_data=nodes_data, position_to_node_map=position_to_node_map)
-    gg.plot_graph_3d(G=G)
+    graph = gg.generate_graph_3d(nodes_data=nodes_data, position_to_node_map=position_to_node_map)
+    gg.plot_graph_3d(graph=graph, scale=scale)
 
 
 if __name__ == '__main__':
