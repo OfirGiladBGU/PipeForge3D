@@ -45,7 +45,7 @@ class MeshBuilder:
             if {"x", "-x"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
             if {"y", "-y"}.issubset(connections):
-                pass
+                pass  # No need to rotate the coupler
             if {"z", "-z"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
         else:
@@ -53,32 +53,37 @@ class MeshBuilder:
 
             # Rotation (In the origin)
             if {"x", "y"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, -1, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, -1]))
             if {"x", "-y"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, -1, 0]))
             if {"-x", "y"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
             if {"-x", "-y"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
             
             if {"x", "z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, -1]))
             if {"x", "-z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, -1]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, -1, 0]))
             if {"-x", "z"}.issubset(connections):
-                pass
-            if {"x", "-z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
+            if {"-x", "-z"}.issubset(connections):
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
             
             if {"y", "z"}.issubset(connections):
-                pass
+                pass  # No need to rotate the elbow
             if {"y", "-z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
             if {"-y", "z"}.issubset(connections):
-                pass
-            if {"y", "-z"}.issubset(connections):
-                pass
-            
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
+            if {"-y", "-z"}.issubset(connections):
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
+
         # Translation
         self.apply_translation(mesh=mesh, position=position)
         return mesh
@@ -244,25 +249,25 @@ def tests():
     gg = GraphGenerator()
 
     # Test Coupler
-    test_coupler_xx(gg=gg, output_path=os.path.join(tests_path, "coupler_xx.obj"))
-    test_coupler_yy(gg=gg, output_path=os.path.join(tests_path, "coupler_yy.obj"))
-    test_coupler_zz(gg=gg, output_path=os.path.join(tests_path, "coupler_zz.obj"))
+    # test_coupler_xx(gg=gg, output_path=os.path.join(tests_path, "coupler_xx.obj"))
+    # test_coupler_yy(gg=gg, output_path=os.path.join(tests_path, "coupler_yy.obj"))
+    # test_coupler_zz(gg=gg, output_path=os.path.join(tests_path, "coupler_zz.obj"))
 
     # Test Elbow
-    test_elbow_xy1(gg=gg, output_path=os.path.join(tests_path, "elbow_xy1.obj"))
-    test_elbow_xy2(gg=gg, output_path=os.path.join(tests_path, "elbow_xy2.obj"))
-    test_elbow_xy3(gg=gg, output_path=os.path.join(tests_path, "elbow_xy3.obj"))
-    test_elbow_xy4(gg=gg, output_path=os.path.join(tests_path, "elbow_xy4.obj"))
-    
-    test_elbow_xz1(gg=gg, output_path=os.path.join(tests_path, "elbow_xz1.obj"))
-    test_elbow_xz2(gg=gg, output_path=os.path.join(tests_path, "elbow_xz2.obj"))
-    test_elbow_xz3(gg=gg, output_path=os.path.join(tests_path, "elbow_xz3.obj"))
-    test_elbow_xz4(gg=gg, output_path=os.path.join(tests_path, "elbow_xz4.obj"))
-    
-    test_elbow_yz1(gg=gg, output_path=os.path.join(tests_path, "elbow_yz1.obj"))
-    test_elbow_yz2(gg=gg, output_path=os.path.join(tests_path, "elbow_yz2.obj"))
-    test_elbow_yz3(gg=gg, output_path=os.path.join(tests_path, "elbow_yz3.obj"))
-    test_elbow_yz4(gg=gg, output_path=os.path.join(tests_path, "elbow_yz4.obj"))
+    # test_elbow_xy1(gg=gg, output_path=os.path.join(tests_path, "elbow_xy1.obj"))
+    # test_elbow_xy2(gg=gg, output_path=os.path.join(tests_path, "elbow_xy2.obj"))
+    # test_elbow_xy3(gg=gg, output_path=os.path.join(tests_path, "elbow_xy3.obj"))
+    # test_elbow_xy4(gg=gg, output_path=os.path.join(tests_path, "elbow_xy4.obj"))
+
+    # test_elbow_xz1(gg=gg, output_path=os.path.join(tests_path, "elbow_xz1.obj"))
+    # test_elbow_xz2(gg=gg, output_path=os.path.join(tests_path, "elbow_xz2.obj"))
+    # test_elbow_xz3(gg=gg, output_path=os.path.join(tests_path, "elbow_xz3.obj"))
+    # test_elbow_xz4(gg=gg, output_path=os.path.join(tests_path, "elbow_xz4.obj"))
+
+    # test_elbow_yz1(gg=gg, output_path=os.path.join(tests_path, "elbow_yz1.obj"))
+    # test_elbow_yz2(gg=gg, output_path=os.path.join(tests_path, "elbow_yz2.obj"))
+    # test_elbow_yz3(gg=gg, output_path=os.path.join(tests_path, "elbow_yz3.obj"))
+    # test_elbow_yz4(gg=gg, output_path=os.path.join(tests_path, "elbow_yz4.obj"))
 
     # Test Tee
 

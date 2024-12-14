@@ -9,12 +9,12 @@ def main():
     # Generate and plot the graph
     gg = GraphGenerator()
     nodes_data, position_to_node_map = gg.generate_random_3d_nodes_structure(num_nodes=num_nodes)
-    G = gg.generate_graph_3d(nodes_data=nodes_data, position_to_node_map=position_to_node_map)
-    # gg.plot_graph_3d(G=G)
+    graph = gg.generate_graph_3d(nodes_data=nodes_data, position_to_node_map=position_to_node_map)
+    # gg.plot_graph_3d(graph=graph)
 
     # Build the mesh
     mb = MeshBuilder()
-    mb.build_mesh(G=G, output_path="output.obj")
+    mb.build_mesh(graph=graph, output_path="output.obj")
 
 
 if __name__ == '__main__':
