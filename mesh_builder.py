@@ -11,9 +11,11 @@ class ConnectionTypes(Enum):
     Coupler = "Coupler.obj"
     Elbow = "Elbow.obj"
     Tee = "Tee.obj"
+    ThreeWayElbow = "ThreeWayElbow.obj"
     Cross = "Cross.obj"
-    FiveWayCross = "FiveWayCross.obj"
-    HexagonalFitting = "HexagonalFitting.obj"
+    FourWayTee = "FourWayTee.obj"
+    FiveWayTee = "FiveWayTee.obj"
+    Hexagonal = "Hexagonal.obj"
 
 
 class MeshBuilder:
@@ -27,10 +29,10 @@ class MeshBuilder:
 
         self.connections_cases: dict[int, Callable] = {
             2: self.coupler_or_elbow,
-            3: self.tee,
-            4: self.cross,
-            5: self.five_way_cross,
-            6: self.hexagonal_fitting
+            3: self.tee_or_three_way_elbow,
+            4: self.cross_or_four_way_tee,
+            5: self.five_way_tee,
+            6: self.hexagonal
         }
 
     def apply_translation(self, mesh: trimesh.Trimesh, position: tuple):
@@ -38,7 +40,7 @@ class MeshBuilder:
         mesh.apply_translation(position)
 
     def coupler_or_elbow(self, position: tuple, connections: list):
-        if connections[0].strip("-") == connections[1].strip("-"):
+        if connections[0].strip("-") == connections[1].strip("-"):  # Coupler
             mesh = self.pipe_meshes[ConnectionTypes.Coupler].copy()
 
             # Rotation (In the origin)
@@ -48,7 +50,7 @@ class MeshBuilder:
                 pass  # No need to rotate the coupler
             if {"z", "-z"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
-        else:
+        else:  # Elbow
             mesh = self.pipe_meshes[ConnectionTypes.Elbow].copy()
 
             # Rotation (In the origin)
@@ -88,25 +90,100 @@ class MeshBuilder:
         self.apply_translation(mesh=mesh, position=position)
         return mesh
 
-    def tee(self, position: tuple, connections: list):
-        mesh = self.pipe_meshes[ConnectionTypes.Tee].copy()
+    def tee_or_three_way_elbow(self, position: tuple, connections: list):
+        stripped_connections = set([connection.strip("-") for connection in connections])
+        if {"x", "y", "z"}.issubset(stripped_connections):  # Three-way elbow
+            mesh = self.pipe_meshes[ConnectionTypes.ThreeWayElbow].copy()
+
+            # Rotation (In the origin)
+            if {"x", "y", "z"}.issubset(connections):
+                pass
+            if {"x", "y", "-z"}.issubset(connections):
+                pass
+            if {"x", "-y", "z"}.issubset(connections):
+                pass
+            if {"x", "-y", "-z"}.issubset(connections):
+                pass
+
+            if {"-x", "y", "z"}.issubset(connections):
+                pass
+            if {"-x", "y", "-z"}.issubset(connections):
+                pass
+            if {"-x", "-y", "z"}.issubset(connections):
+                pass
+            if {"-x", "-y", "-z"}.issubset(connections):
+                pass
+
+        else:  # Tee
+            mesh = self.pipe_meshes[ConnectionTypes.Tee].copy()
+
+            # Rotation (In the origin)
+            if {"x", "-x", "y"}.issubset(connections):
+                pass
+
+            if {"x", "-x", "-y"}.issubset(connections):
+                pass
+
+            if {"x", "-x", "z"}.issubset(connections):
+                pass
+
+            if {"x", "-x", "-z"}.issubset(connections):
+                pass
+
+
+            if {"y", "-y", "x"}.issubset(connections):
+                pass
+
+            if {"y", "-y", "-x"}.issubset(connections):
+                pass
+
+            if {"y", "-y", "z"}.issubset(connections):
+                pass
+
+            if {"y", "-y", "-z"}.issubset(connections):
+                pass
+
+
+            if {"z", "-z", "x"}.issubset(connections):
+                pass
+
+            if {"z", "-z", "-x"}.issubset(connections):
+                pass
+
+            if {"z", "-z", "y"}.issubset(connections):
+                pass
+
+            if {"z", "-z", "-y"}.issubset(connections):
+                pass
+
+        # Translation
         self.apply_translation(mesh=mesh, position=position)
         return mesh
 
-    def cross(self, position: tuple, connections: list):
-        mesh = self.pipe_meshes[ConnectionTypes.Cross].copy()
+    def cross_or_four_way_tee(self, position: tuple, connections: list):
+        stripped_connections = set([connection.strip("-") for connection in connections])
+        if {"x", "y", "z"}.issubset(stripped_connections):  # Four-Way Tee
+            mesh = self.pipe_meshes[ConnectionTypes.FourWayTee].copy()
+
+        else: # Cross
+            mesh = self.pipe_meshes[ConnectionTypes.Cross].copy()
+
+        # Translation
         self.apply_translation(mesh=mesh, position=position)
         return mesh
 
-    def five_way_cross(self, position: tuple, connections: list):
-        mesh = self.pipe_meshes[ConnectionTypes.FiveWayCross].copy()
+    def five_way_tee(self, position: tuple, connections: list):
+        mesh = self.pipe_meshes[ConnectionTypes.FiveWayTee].copy()
+
+        # Translation
         self.apply_translation(mesh=mesh, position=position)
         return mesh
 
-    def hexagonal_fitting(self, position: tuple, connections: list):
-        mesh = self.pipe_meshes[ConnectionTypes.HexagonalFitting].copy()
+    def hexagonal(self, position: tuple, connections: list):
+        mesh = self.pipe_meshes[ConnectionTypes.Hexagonal].copy()
+
+        # Translation (No need to rotate the hexagonal)
         self.apply_translation(mesh=mesh, position=position)
-        # No need to rotate the hexagonal fitting
         return mesh
 
     def build_mesh(self, graph: nx.Graph, output_path = "combined_mesh.obj"):
