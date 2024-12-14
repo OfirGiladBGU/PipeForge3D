@@ -8,6 +8,7 @@ from typing import Callable
 
 
 class ConnectionTypes(Enum):
+    Cap = "Cap.obj"
     Coupler = "Coupler.obj"
     Elbow = "Elbow.obj"
     Tee = "Tee.obj"
@@ -28,6 +29,7 @@ class MeshBuilder:
             self.pipe_meshes[connection_type] = trimesh.load(file_obj=pipe_mesh_path)
 
         self.connections_cases: dict[int, Callable] = {
+            1: self.cap,
             2: self.coupler_or_elbow,
             3: self.tee_or_three_way_elbow,
             4: self.cross_or_four_way_tee,
@@ -38,6 +40,30 @@ class MeshBuilder:
     def apply_translation(self, mesh: trimesh.Trimesh, position: tuple):
         position = np.array(position) * self.mesh_scale
         mesh.apply_translation(position)
+
+    def cap(self, position: tuple, connections: list):
+        mesh = self.pipe_meshes[ConnectionTypes.Cap].copy()
+
+        # Rotation (In the origin)
+        if {"x"}.issubset(connections):
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
+        if {"-x"}.issubset(connections):
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, -1]))
+
+        if {"y"}.issubset(connections):
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
+        if {"-y"}.issubset(connections):
+            pass  # No need to rotate the cap
+
+        if {"z"}.issubset(connections):
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
+        if {"-z"}.issubset(connections):
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
+
+        # Translation
+        self.apply_translation(mesh=mesh, position=position)
+        return mesh
 
     def coupler_or_elbow(self, position: tuple, connections: list):
         if connections[0].strip("-") == connections[1].strip("-"):  # Coupler
@@ -92,7 +118,47 @@ class MeshBuilder:
 
     def tee_or_three_way_elbow(self, position: tuple, connections: list):
         stripped_connections = set([connection.strip("-") for connection in connections])
-        if {"x", "y", "z"}.issubset(stripped_connections):  # Three-way elbow
+        if not {"x", "y", "z"}.issubset(stripped_connections):  # Tee
+            mesh = self.pipe_meshes[ConnectionTypes.Tee].copy()
+
+            # Rotation (In the origin)
+            if {"x", "-x", "y"}.issubset(connections):
+                pass
+
+            if {"x", "-x", "-y"}.issubset(connections):
+                pass
+
+            if {"x", "-x", "z"}.issubset(connections):
+                pass
+
+            if {"x", "-x", "-z"}.issubset(connections):
+                pass
+
+            if {"y", "-y", "x"}.issubset(connections):
+                pass
+
+            if {"y", "-y", "-x"}.issubset(connections):
+                pass
+
+            if {"y", "-y", "z"}.issubset(connections):
+                pass
+
+            if {"y", "-y", "-z"}.issubset(connections):
+                pass
+
+            if {"z", "-z", "x"}.issubset(connections):
+                pass
+
+            if {"z", "-z", "-x"}.issubset(connections):
+                pass
+
+            if {"z", "-z", "y"}.issubset(connections):
+                pass
+
+            if {"z", "-z", "-y"}.issubset(connections):
+                pass
+
+        else:  # Three-Way Elbow
             mesh = self.pipe_meshes[ConnectionTypes.ThreeWayElbow].copy()
 
             # Rotation (In the origin)
@@ -114,48 +180,6 @@ class MeshBuilder:
             if {"-x", "-y", "-z"}.issubset(connections):
                 pass
 
-        else:  # Tee
-            mesh = self.pipe_meshes[ConnectionTypes.Tee].copy()
-
-            # Rotation (In the origin)
-            if {"x", "-x", "y"}.issubset(connections):
-                pass
-
-            if {"x", "-x", "-y"}.issubset(connections):
-                pass
-
-            if {"x", "-x", "z"}.issubset(connections):
-                pass
-
-            if {"x", "-x", "-z"}.issubset(connections):
-                pass
-
-
-            if {"y", "-y", "x"}.issubset(connections):
-                pass
-
-            if {"y", "-y", "-x"}.issubset(connections):
-                pass
-
-            if {"y", "-y", "z"}.issubset(connections):
-                pass
-
-            if {"y", "-y", "-z"}.issubset(connections):
-                pass
-
-
-            if {"z", "-z", "x"}.issubset(connections):
-                pass
-
-            if {"z", "-z", "-x"}.issubset(connections):
-                pass
-
-            if {"z", "-z", "y"}.issubset(connections):
-                pass
-
-            if {"z", "-z", "-y"}.issubset(connections):
-                pass
-
         # Translation
         self.apply_translation(mesh=mesh, position=position)
         return mesh
@@ -165,8 +189,44 @@ class MeshBuilder:
         if {"x", "y", "z"}.issubset(stripped_connections):  # Four-Way Tee
             mesh = self.pipe_meshes[ConnectionTypes.FourWayTee].copy()
 
+            # Rotation (In the origin)
+            if {"x", "y", "z", "-z"}.issubset(connections):
+                pass
+            if {"x", "-y", "z", "-z"}.issubset(connections):
+                pass
+            if {"-x", "y", "z", "-z"}.issubset(connections):
+                pass
+            if {"-x", "-y", "z", "-z"}.issubset(connections):
+                pass
+
+            if {"x", "y", "-y", "z"}.issubset(connections):
+                pass
+            if {"x", "y", "-y", "-z"}.issubset(connections):
+                pass
+            if {"-x", "y", "-y", "z"}.issubset(connections):
+                pass
+            if {"-x", "y", "-y", "-z"}.issubset(connections):
+                pass
+
+            if {"x", "-x", "y", "z"}.issubset(connections):
+                pass
+            if {"x", "-x", "y", "-z"}.issubset(connections):
+                pass
+            if {"x", "-x", "-y", "z"}.issubset(connections):
+                pass
+            if {"x", "-x", "-y", "-z"}.issubset(connections):
+                pass
+
         else: # Cross
             mesh = self.pipe_meshes[ConnectionTypes.Cross].copy()
+
+            # Rotation (In the origin)
+            if {"x", "-x", "y", "-y"}.issubset(connections):
+                pass
+            if {"x", "-x", "z", "-z"}.issubset(connections):
+                pass
+            if {"y", "-y", "z", "-z"}.issubset(connections):
+                pass
 
         # Translation
         self.apply_translation(mesh=mesh, position=position)
@@ -174,6 +234,22 @@ class MeshBuilder:
 
     def five_way_tee(self, position: tuple, connections: list):
         mesh = self.pipe_meshes[ConnectionTypes.FiveWayTee].copy()
+
+        # Rotation (In the origin)
+        if {"x", "-x", "y", "-y", "z"}.issubset(connections):
+            pass
+        if {"x", "-x", "y", "-y", "-z"}.issubset(connections):
+            pass
+
+        if {"x", "-x", "y", "z", "-z"}.issubset(connections):
+            pass
+        if {"x", "-x", "-y", "z", "-z"}.issubset(connections):
+            pass
+
+        if {"x", "y", "-y", "z", "-z"}.issubset(connections):
+            pass
+        if {"-x", "y", "-y", "z", "-z"}.issubset(connections):
+            pass
 
         # Translation
         self.apply_translation(mesh=mesh, position=position)
@@ -221,7 +297,7 @@ def build_test_mesh(gg, positions: list, active_connection_lists: list, output_p
         nodes_data[i] = {
             "position": positions[i],
             "active_connection_list": active_connection_lists[i],
-            "invalid_connections": list(set(gg.connection_types) - set(active_connection_lists[i]))
+            "invalid_connection_list": list(set(gg.connection_types) - set(active_connection_lists[i]))
         }
         position_to_node_map[i] = positions[i]
 
@@ -231,6 +307,43 @@ def build_test_mesh(gg, positions: list, active_connection_lists: list, output_p
     # Build the mesh
     mb = MeshBuilder()
     mb.build_mesh(graph=graph, output_path=output_path)
+
+
+# Test Cap
+def test_cap_x1(gg, output_path):
+    positions = [(0, 0, 0), (1, 0, 0)]
+    active_connection_lists = [["x"], ["x", "-x"]]
+    build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def test_cap_x2(gg, output_path):
+    positions = [(0, 0, 0), (-1, 0, 0)]
+    active_connection_lists = [["-x"], ["x", "-x"]]
+    build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def test_cap_y1(gg, output_path):
+    positions = [(0, 0, 0), (0, 1, 0)]
+    active_connection_lists = [["y"], ["y", "-y"]]
+    build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def test_cap_y2(gg, output_path):
+    positions = [(0, 0, 0), (0, -1, 0)]
+    active_connection_lists = [["-y"], ["y", "-y"]]
+    build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def test_cap_z1(gg, output_path):
+    positions = [(0, 0, 0), (0, 0, 1)]
+    active_connection_lists = [["z"], ["z", "-z"]]
+    build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def test_cap_z2(gg, output_path):
+    positions = [(0, 0, 0), (0, 0, -1)]
+    active_connection_lists = [["-z"], ["z", "-z"]]
+    build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 # Test Coupler
@@ -258,15 +371,18 @@ def test_elbow_xy1(gg, output_path):
     active_connection_lists = [["x", "-x"], ["x", "y"], ["y", "-y"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
+
 def test_elbow_xy2(gg, output_path):
     positions = [(0, 0, 0), (1, 0, 0), (1, -1, 0)]
     active_connection_lists = [["x", "-x"], ["x", "-y"], ["y", "-y"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
+
 def test_elbow_xy3(gg, output_path):
     positions = [(0, 0, 0), (-1, 0, 0), (-1, 1, 0)]
     active_connection_lists = [["x", "-x"], ["-x", "y"], ["y", "-y"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
 
 def test_elbow_xy4(gg, output_path):
     positions = [(0, 0, 0), (-1, 0, 0), (-1, -1, 0)]
@@ -279,15 +395,18 @@ def test_elbow_xz1(gg, output_path):
     active_connection_lists = [["x", "-x"], ["x", "z"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
+
 def test_elbow_xz2(gg, output_path):
     positions = [(0, 0, 0), (1, 0, 0), (1, 0, -1)]
     active_connection_lists = [["x", "-x"], ["x", "-z"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
+
 def test_elbow_xz3(gg, output_path):
     positions = [(0, 0, 0), (-1, 0, 0), (-1, 0, 1)]
     active_connection_lists = [["x", "-x"], ["-x", "z"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
 
 def test_elbow_xz4(gg, output_path):
     positions = [(0, 0, 0), (-1, 0, 0), (-1, 0, -1)]
@@ -300,15 +419,18 @@ def test_elbow_yz1(gg, output_path):
     active_connection_lists = [["y", "-y"], ["y", "z"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
+
 def test_elbow_yz2(gg, output_path):
     positions = [(0, 0, 0), (0, 1, 0), (0, 1, -1)]
     active_connection_lists = [["y", "-y"], ["y", "-z"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
+
 def test_elbow_yz3(gg, output_path):
     positions = [(0, 0, 0), (0, -1, 0), (0, -1, 1)]
     active_connection_lists = [["y", "-y"], ["-y", "z"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
 
 def test_elbow_yz4(gg, output_path):
     positions = [(0, 0, 0), (0, -1, 0), (0, -1, -1)]
@@ -325,9 +447,21 @@ def tests():
     # Build Custom Graph
     gg = GraphGenerator()
 
+    # Test Cap
+    # test_cap_x1(gg=gg, output_path=os.path.join(tests_path, "cap_x1.obj"))
+    # test_cap_x2(gg=gg, output_path=os.path.join(tests_path, "cap_x2.obj"))
+
+    # test_cap_y1(gg=gg, output_path=os.path.join(tests_path, "cap_y1.obj"))
+    # test_cap_y2(gg=gg, output_path=os.path.join(tests_path, "cap_y2.obj"))
+
+    # test_cap_z1(gg=gg, output_path=os.path.join(tests_path, "cap_z1.obj"))
+    # test_cap_z2(gg=gg, output_path=os.path.join(tests_path, "cap_z2.obj"))
+
     # Test Coupler
     # test_coupler_xx(gg=gg, output_path=os.path.join(tests_path, "coupler_xx.obj"))
+
     # test_coupler_yy(gg=gg, output_path=os.path.join(tests_path, "coupler_yy.obj"))
+
     # test_coupler_zz(gg=gg, output_path=os.path.join(tests_path, "coupler_zz.obj"))
 
     # Test Elbow
@@ -348,9 +482,16 @@ def tests():
 
     # Test Tee
 
+    # Test ThreeWayElbow
+
     # Test Cross
 
+    # Test FourWayTee
+
     # Test FiveWayCross
+
+    # Test Hexagonal
+
 
 
 if __name__ == '__main__':

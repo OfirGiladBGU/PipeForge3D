@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 class GraphGenerator:
     def __init__(self):
         # Parameters
-        self.available_num_of_connections = [2, 3, 4, 5, 6]
-        self.num_of_connections_probabilities = [0.5, 0.2, 0.1, 0.15, 0.05]
+        self.available_num_of_connections = [1, 2, 3, 4, 5, 6]
+        self.num_of_connections_probabilities = [0.05, 0.5, 0.2, 0.1, 0.10, 0.05]
         self.coupler_elbow_probabilities = [0.8, 0.2]
         self.connection_types = ["x", "-x", "y", "-y", "z", "-z"]
 
