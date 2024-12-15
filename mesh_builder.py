@@ -351,7 +351,7 @@ def test_coupler_yy(gg, output_path):
 
 
 def test_coupler_zz(gg, output_path):
-    positions = [(0, 0, 0), (0, 1, 0)]
+    positions = [(0, 0, 0), (0, 0, 1)]
     active_connection_lists = [["z", "-z"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
@@ -456,37 +456,37 @@ def tests():
     gg = GraphGenerator()
 
     # Test Cap
-    # test_cap_x1(gg=gg, output_path=os.path.join(tests_path, "cap_x1.obj"))
-    # test_cap_x2(gg=gg, output_path=os.path.join(tests_path, "cap_x2.obj"))
+    test_cap_x1(gg=gg, output_path=os.path.join(tests_path, "cap_x1.obj"))
+    test_cap_x2(gg=gg, output_path=os.path.join(tests_path, "cap_x2.obj"))
 
-    # test_cap_y1(gg=gg, output_path=os.path.join(tests_path, "cap_y1.obj"))
-    # test_cap_y2(gg=gg, output_path=os.path.join(tests_path, "cap_y2.obj"))
+    test_cap_y1(gg=gg, output_path=os.path.join(tests_path, "cap_y1.obj"))
+    test_cap_y2(gg=gg, output_path=os.path.join(tests_path, "cap_y2.obj"))
 
-    # test_cap_z1(gg=gg, output_path=os.path.join(tests_path, "cap_z1.obj"))
-    # test_cap_z2(gg=gg, output_path=os.path.join(tests_path, "cap_z2.obj"))
+    test_cap_z1(gg=gg, output_path=os.path.join(tests_path, "cap_z1.obj"))
+    test_cap_z2(gg=gg, output_path=os.path.join(tests_path, "cap_z2.obj"))
 
     # Test Coupler
-    # test_coupler_xx(gg=gg, output_path=os.path.join(tests_path, "coupler_xx.obj"))
+    test_coupler_xx(gg=gg, output_path=os.path.join(tests_path, "coupler_xx.obj"))
 
-    # test_coupler_yy(gg=gg, output_path=os.path.join(tests_path, "coupler_yy.obj"))
+    test_coupler_yy(gg=gg, output_path=os.path.join(tests_path, "coupler_yy.obj"))
 
-    # test_coupler_zz(gg=gg, output_path=os.path.join(tests_path, "coupler_zz.obj"))
+    test_coupler_zz(gg=gg, output_path=os.path.join(tests_path, "coupler_zz.obj"))
 
     # Test Elbow
-    # test_elbow_xy1(gg=gg, output_path=os.path.join(tests_path, "elbow_xy1.obj"))
-    # test_elbow_xy2(gg=gg, output_path=os.path.join(tests_path, "elbow_xy2.obj"))
-    # test_elbow_xy3(gg=gg, output_path=os.path.join(tests_path, "elbow_xy3.obj"))
-    # test_elbow_xy4(gg=gg, output_path=os.path.join(tests_path, "elbow_xy4.obj"))
+    test_elbow_xy1(gg=gg, output_path=os.path.join(tests_path, "elbow_xy1.obj"))
+    test_elbow_xy2(gg=gg, output_path=os.path.join(tests_path, "elbow_xy2.obj"))
+    test_elbow_xy3(gg=gg, output_path=os.path.join(tests_path, "elbow_xy3.obj"))
+    test_elbow_xy4(gg=gg, output_path=os.path.join(tests_path, "elbow_xy4.obj"))
 
-    # test_elbow_xz1(gg=gg, output_path=os.path.join(tests_path, "elbow_xz1.obj"))
-    # test_elbow_xz2(gg=gg, output_path=os.path.join(tests_path, "elbow_xz2.obj"))
-    # test_elbow_xz3(gg=gg, output_path=os.path.join(tests_path, "elbow_xz3.obj"))
-    # test_elbow_xz4(gg=gg, output_path=os.path.join(tests_path, "elbow_xz4.obj"))
+    test_elbow_xz1(gg=gg, output_path=os.path.join(tests_path, "elbow_xz1.obj"))
+    test_elbow_xz2(gg=gg, output_path=os.path.join(tests_path, "elbow_xz2.obj"))
+    test_elbow_xz3(gg=gg, output_path=os.path.join(tests_path, "elbow_xz3.obj"))
+    test_elbow_xz4(gg=gg, output_path=os.path.join(tests_path, "elbow_xz4.obj"))
 
-    # test_elbow_yz1(gg=gg, output_path=os.path.join(tests_path, "elbow_yz1.obj"))
-    # test_elbow_yz2(gg=gg, output_path=os.path.join(tests_path, "elbow_yz2.obj"))
-    # test_elbow_yz3(gg=gg, output_path=os.path.join(tests_path, "elbow_yz3.obj"))
-    # test_elbow_yz4(gg=gg, output_path=os.path.join(tests_path, "elbow_yz4.obj"))
+    test_elbow_yz1(gg=gg, output_path=os.path.join(tests_path, "elbow_yz1.obj"))
+    test_elbow_yz2(gg=gg, output_path=os.path.join(tests_path, "elbow_yz2.obj"))
+    test_elbow_yz3(gg=gg, output_path=os.path.join(tests_path, "elbow_yz3.obj"))
+    test_elbow_yz4(gg=gg, output_path=os.path.join(tests_path, "elbow_yz4.obj"))
 
     # Test Tee
 
