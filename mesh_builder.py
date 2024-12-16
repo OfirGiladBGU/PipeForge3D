@@ -127,6 +127,7 @@ class MeshBuilder:
                 pass
             if {"x", "-x", "-y"}.issubset(connections):
                 pass
+
             if {"x", "-x", "z"}.issubset(connections):
                 pass
             if {"x", "-x", "-z"}.issubset(connections):
@@ -136,6 +137,7 @@ class MeshBuilder:
                 pass
             if {"-x", "y", "-y"}.issubset(connections):
                 pass
+
             if {"y", "-y", "z"}.issubset(connections):
                 pass
             if {"y", "-y", "-z"}.issubset(connections):
@@ -145,6 +147,7 @@ class MeshBuilder:
                 pass
             if {"-x", "z", "-z",}.issubset(connections):
                 pass
+
             if {"y", "z", "-z"}.issubset(connections):
                 pass
             if {"-y", "z", "-z"}.issubset(connections):
@@ -162,7 +165,6 @@ class MeshBuilder:
                 pass
             if {"x", "-y", "-z"}.issubset(connections):
                 pass
-
             if {"-x", "y", "z"}.issubset(connections):
                 pass
             if {"-x", "y", "-z"}.issubset(connections):
@@ -182,13 +184,13 @@ class MeshBuilder:
             mesh = self.pipe_meshes[ConnectionTypes.FourWayTee].copy()
 
             # Rotation (In the origin)
-            if {"x", "y", "z", "-z"}.issubset(connections):
+            if {"x", "-x", "y", "z"}.issubset(connections):
                 pass
-            if {"x", "-y", "z", "-z"}.issubset(connections):
+            if {"x", "-x", "y", "-z"}.issubset(connections):
                 pass
-            if {"-x", "y", "z", "-z"}.issubset(connections):
+            if {"x", "-x", "-y", "z"}.issubset(connections):
                 pass
-            if {"-x", "-y", "z", "-z"}.issubset(connections):
+            if {"x", "-x", "-y", "-z"}.issubset(connections):
                 pass
 
             if {"x", "y", "-y", "z"}.issubset(connections):
@@ -200,13 +202,13 @@ class MeshBuilder:
             if {"-x", "y", "-y", "-z"}.issubset(connections):
                 pass
 
-            if {"x", "-x", "y", "z"}.issubset(connections):
+            if {"x", "y", "z", "-z"}.issubset(connections):
                 pass
-            if {"x", "-x", "y", "-z"}.issubset(connections):
+            if {"x", "-y", "z", "-z"}.issubset(connections):
                 pass
-            if {"x", "-x", "-y", "z"}.issubset(connections):
+            if {"-x", "y", "z", "-z"}.issubset(connections):
                 pass
-            if {"x", "-x", "-y", "-z"}.issubset(connections):
+            if {"-x", "-y", "z", "-z"}.issubset(connections):
                 pass
 
         else: # Cross
@@ -430,16 +432,75 @@ def test_elbow_yz4(gg, output_path):
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
+# Test Tee
+def test_tee_xxy1(gg, output_path):
+    positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, 1, 0)]
+    active_connection_lists = [["x", "-x", "y"], ["x", "-x"], ["x", "-x"], ["y", "-y"]]
+    build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def test_tee_xxy2(gg, output_path):
+    positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, -1, 0)]
+    active_connection_lists = [["x", "-x", "-y"], ["x", "-x"], ["x", "-x"], ["y", "-y"]]
+    build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def test_tee_xxz1(gg, output_path):
+    positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, 0, 1)]
+    active_connection_lists = [["x", "-x", "z"], ["x", "-x"], ["x", "-x"], ["z", "-z"]]
+    build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def test_tee_xxz2(gg, output_path):
+    positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, 0, -1)]
+    active_connection_lists = [["x", "-x", "-z"], ["x", "-x"], ["x", "-x"], ["z", "-z"]]
+    build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def test_tee_xyy1(gg, output_path):
+    pass
+
+
+def test_tee_xyy2(gg, output_path):
+    pass
+
+
+def test_tee_yyz1(gg, output_path):
+    pass
+
+
+def test_tee_yyz2(gg, output_path):
+    pass
+
+
+def test_tee_xzz1(gg, output_path):
+    pass
+
+
+def test_tee_xzz2(gg, output_path):
+    pass
+
+
+def test_tee_yzz1(gg, output_path):
+    pass
+
+
+def test_tee_yzz2(gg, output_path):
+    pass
+
+
 # Test Cross
 def test_cross_xxyy(gg, output_path):
     positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0)]
     active_connection_lists = [["x", "-x", "y", "-y"], ["x", "-x"], ["x", "-x"], ["y", "-y"], ["y", "-y"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
+
 def test_cross_xxzz(gg, output_path):
     positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, 0, 1), (0, 0, -1)]
     active_connection_lists = [["x", "-x", "z", "-z"], ["x", "-x"], ["x", "-x"], ["z", "-z"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
 
 def test_cross_yyzz(gg, output_path):
     positions = [(0, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
@@ -447,7 +508,8 @@ def test_cross_yyzz(gg, output_path):
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
-def cust_test(gg, output_path):
+# Custom Test
+def custom_test(gg, output_path):
     positions = [(2, 0, 0), (1, 0, 0), (2, 1, 0)]
     active_connection_lists = [['-x', 'y'], ['-x', 'x'], ['-y', 'z', '-z']]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
@@ -496,6 +558,24 @@ def tests():
     test_elbow_yz4(gg=gg, output_path=os.path.join(tests_path, "elbow_yz4.obj"))
 
     # Test Tee
+    test_tee_xxy1(gg=gg, output_path=os.path.join(tests_path, "tee_xxy1.obj"))
+    test_tee_xxy2(gg=gg, output_path=os.path.join(tests_path, "tee_xxy2.obj"))
+
+    test_tee_xxz1(gg=gg, output_path=os.path.join(tests_path, "tee_xxz1.obj"))
+    test_tee_xxz2(gg=gg, output_path=os.path.join(tests_path, "tee_xxz2.obj"))
+
+    test_tee_xyy1(gg=gg, output_path=os.path.join(tests_path, "tee_xyy1.obj"))
+    test_tee_xyy2(gg=gg, output_path=os.path.join(tests_path, "tee_xyy2.obj"))
+
+    test_tee_yyz1(gg=gg, output_path=os.path.join(tests_path, "tee_yyz1.obj"))
+    test_tee_yyz2(gg=gg, output_path=os.path.join(tests_path, "tee_yyz2.obj"))
+
+    test_tee_xzz1(gg=gg, output_path=os.path.join(tests_path, "tee_xzz1.obj"))
+    test_tee_xzz2(gg=gg, output_path=os.path.join(tests_path, "tee_xzz2.obj"))
+
+    test_tee_yzz1(gg=gg, output_path=os.path.join(tests_path, "tee_yzz1.obj"))
+    test_tee_yzz2(gg=gg, output_path=os.path.join(tests_path, "tee_yzz2.obj"))
+
 
     # Test ThreeWayElbow
 
@@ -513,7 +593,7 @@ def tests():
     # Test Hexagonal
 
     # Custom Test
-    cust_test(gg=gg, output_path=os.path.join(tests_path, "custom.obj"))
+    custom_test(gg=gg, output_path=os.path.join(tests_path, "custom.obj"))
 
 
 if __name__ == '__main__':
