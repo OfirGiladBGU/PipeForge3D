@@ -10,7 +10,8 @@ def main():
     gg = GraphGenerator()
     nodes_data, position_to_node_map = gg.generate_random_3d_nodes_structure(num_nodes=num_nodes)
     graph = gg.generate_graph_3d(nodes_data=nodes_data, position_to_node_map=position_to_node_map)
-    # gg.plot_graph_3d(graph=graph)
+    # print(nodes_data)
+    gg.plot_graph_3d(graph=graph)
 
     # Build the mesh
     mb = MeshBuilder()

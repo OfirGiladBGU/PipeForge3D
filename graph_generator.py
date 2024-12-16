@@ -230,7 +230,8 @@ class GraphGenerator:
             ax.scatter(x, y, z, c="blue", s=25)
             ax.text(x, y, z, s=str(node), color="red", fontsize=8)
 
-        plt.show()
+        # plt.show()
+        plt.savefig("graph.png")
 
 
 #########

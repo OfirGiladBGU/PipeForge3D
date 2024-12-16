@@ -81,36 +81,37 @@ class MeshBuilder:
 
             # Rotation (In the origin)
             if {"x", "y"}.issubset(connections):
-                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, -1, 0]))
-                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, -1]))
-            if {"x", "-y"}.issubset(connections):
-                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, -1, 0]))
-            if {"-x", "y"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
-            if {"-x", "-y"}.issubset(connections):
+                pass  # No need to rotate the elbow
+            if {"x", "-y"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
+            if {"-x", "y"}.issubset(connections):
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, -1, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, -1]))
+            if {"-x", "-y"}.issubset(connections):
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, -1, 0]))
             
             if {"x", "z"}.issubset(connections):
-                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, -1]))
-            if {"x", "-z"}.issubset(connections):
-                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, -1]))
-                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, -1, 0]))
-            if {"-x", "z"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
-            if {"-x", "-z"}.issubset(connections):
+            if {"x", "-z"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
+            if {"-x", "z"}.issubset(connections):
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, -1]))
+            if {"-x", "-z"}.issubset(connections):
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, -1]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, -1, 0]))
             
             if {"y", "z"}.issubset(connections):
-                pass  # No need to rotate the elbow
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
             if {"y", "-z"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
             if {"-y", "z"}.issubset(connections):
-                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
+                pass  # No need to rotate the elbow
             if {"-y", "-z"}.issubset(connections):
-                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
-                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
 
         # Translation
         self.apply_translation(mesh=mesh, position=position)
@@ -358,74 +359,74 @@ def test_coupler_zz(gg, output_path):
 
 # Test Elbow
 def test_elbow_xy1(gg, output_path):
-    positions = [(0, 0, 0), (1, 0, 0), (1, 1, 0)]
-    active_connection_lists = [["x", "-x"], ["x", "y"], ["y", "-y"]]
+    positions = [(0, 0, 0), (1, 0, 0), (0, 1, 0)]
+    active_connection_lists = [["x", "y"], ["x", "-x"], ["y", "-y"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_elbow_xy2(gg, output_path):
-    positions = [(0, 0, 0), (1, 0, 0), (1, -1, 0)]
-    active_connection_lists = [["x", "-x"], ["x", "-y"], ["y", "-y"]]
+    positions = [(0, 0, 0), (1, 0, 0), (0, -1, 0)]
+    active_connection_lists = [["x", "-y"], ["x", "-x"], ["y", "-y"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_elbow_xy3(gg, output_path):
-    positions = [(0, 0, 0), (-1, 0, 0), (-1, 1, 0)]
-    active_connection_lists = [["x", "-x"], ["-x", "y"], ["y", "-y"]]
+    positions = [(0, 0, 0), (-1, 0, 0), (0, 1, 0)]
+    active_connection_lists = [["-x", "y"], ["x", "-x"], ["y", "-y"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_elbow_xy4(gg, output_path):
-    positions = [(0, 0, 0), (-1, 0, 0), (-1, -1, 0)]
-    active_connection_lists = [["x", "-x"], ["-x", "-y"], ["y", "-y"]]
+    positions = [(0, 0, 0), (-1, 0, 0), (0, -1, 0)]
+    active_connection_lists = [["-x", "-y"], ["x", "-x"], ["y", "-y"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_elbow_xz1(gg, output_path):
-    positions = [(0, 0, 0), (1, 0, 0), (1, 0, 1)]
-    active_connection_lists = [["x", "-x"], ["x", "z"], ["z", "-z"]]
+    positions = [(0, 0, 0), (1, 0, 0), (0, 0, 1)]
+    active_connection_lists = [["x", "z"], ["x", "-x"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_elbow_xz2(gg, output_path):
-    positions = [(0, 0, 0), (1, 0, 0), (1, 0, -1)]
-    active_connection_lists = [["x", "-x"], ["x", "-z"], ["z", "-z"]]
+    positions = [(0, 0, 0), (1, 0, 0), (0, 0, -1)]
+    active_connection_lists = [["x", "-z"], ["x", "-x"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_elbow_xz3(gg, output_path):
-    positions = [(0, 0, 0), (-1, 0, 0), (-1, 0, 1)]
-    active_connection_lists = [["x", "-x"], ["-x", "z"], ["z", "-z"]]
+    positions = [(0, 0, 0), (-1, 0, 0), (0, 0, 1)]
+    active_connection_lists = [["-x", "z"], ["x", "-x"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_elbow_xz4(gg, output_path):
-    positions = [(0, 0, 0), (-1, 0, 0), (-1, 0, -1)]
-    active_connection_lists = [["x", "-x"], ["-x", "-z"], ["z", "-z"]]
+    positions = [(0, 0, 0), (-1, 0, 0), (0, 0, -1)]
+    active_connection_lists = [["-x", "-z"], ["x", "-x"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_elbow_yz1(gg, output_path):
-    positions = [(0, 0, 0), (0, 1, 0), (0, 1, 1)]
-    active_connection_lists = [["y", "-y"], ["y", "z"], ["z", "-z"]]
+    positions = [(0, 0, 0), (0, 1, 0), (0, 0, 1)]
+    active_connection_lists = [["y", "z"], ["y", "-y"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_elbow_yz2(gg, output_path):
-    positions = [(0, 0, 0), (0, 1, 0), (0, 1, -1)]
-    active_connection_lists = [["y", "-y"], ["y", "-z"], ["z", "-z"]]
+    positions = [(0, 0, 0), (0, 1, 0), (0, 0, -1)]
+    active_connection_lists = [["y", "-z"], ["y", "-y"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_elbow_yz3(gg, output_path):
-    positions = [(0, 0, 0), (0, -1, 0), (0, -1, 1)]
-    active_connection_lists = [["y", "-y"], ["-y", "z"], ["z", "-z"]]
+    positions = [(0, 0, 0), (0, -1, 0), (0, 0, 1)]
+    active_connection_lists = [["-y", "z"], ["y", "-y"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_elbow_yz4(gg, output_path):
-    positions = [(0, 0, 0), (0, -1, 0), (0, -1, -1)]
-    active_connection_lists = [["y", "-y"], ["-y", "-z"], ["z", "-z"]]
+    positions = [(0, 0, 0), (0, -1, 0), (0, 0, -1)]
+    active_connection_lists = [["-y", "-z"], ["y", "-y"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
@@ -443,6 +444,12 @@ def test_cross_xxzz(gg, output_path):
 def test_cross_yyzz(gg, output_path):
     positions = [(0, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
     active_connection_lists = [["y", "-y", "z", "-z"], ["y", "-y"], ["y", "-y"], ["z", "-z"], ["z", "-z"]]
+    build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def cust_test(gg, output_path):
+    positions = [(2, 0, 0), (1, 0, 0), (2, 1, 0)]
+    active_connection_lists = [['-x', 'y'], ['-x', 'x'], ['-y', 'z', '-z']]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
@@ -505,6 +512,8 @@ def tests():
 
     # Test Hexagonal
 
+    # Custom Test
+    cust_test(gg=gg, output_path=os.path.join(tests_path, "custom.obj"))
 
 
 if __name__ == '__main__':
