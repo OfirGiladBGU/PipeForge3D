@@ -4,7 +4,7 @@ from mesh_builder import MeshBuilder
 
 def main():
     # Parameters
-    num_nodes = 20
+    num_of_nodes = 20
     num_of_outputs = 2
 
     # Generate and plot the graphs

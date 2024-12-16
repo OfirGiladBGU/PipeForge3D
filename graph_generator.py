@@ -174,7 +174,7 @@ class GraphGenerator:
                 conditions = [
                     position_to_node_map.get(new_node_position, -1) == -1,
                     new_node_position not in node_positions_queue,
-                    current_num_of_nodes < num_nodes
+                    current_num_of_nodes < num_of_nodes
                 ]
                 if all(conditions):
                     node_positions_queue.append(new_node_position)
