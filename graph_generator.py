@@ -122,7 +122,7 @@ class GraphGenerator:
     ######################
     # Building functions #
     ######################
-    def generate_random_3d_nodes_structure(self, num_nodes: int):
+    def generate_random_3d_nodes_structure(self, num_of_nodes: int):
         current_num_of_nodes = 0
         nodes_data = {}
         position_to_node_map = {}
@@ -132,7 +132,7 @@ class GraphGenerator:
         node_positions_queue.append(node_position)
         current_num_of_nodes += 1
 
-        for node_idx in range(num_nodes):
+        for node_idx in range(num_of_nodes):
             # Check if there are no more nodes that can be added
             if not node_positions_queue:
                 break
@@ -234,10 +234,10 @@ class GraphGenerator:
         plt.savefig("graph.png")
 
 
-#########
-# Tests #
-#########
-def tests():
+########
+# Test #
+########
+def test():
     # Parameters
     num_nodes = 20
     scale = 1
@@ -250,4 +250,4 @@ def tests():
 
 
 if __name__ == '__main__':
-    tests()
+    test()
