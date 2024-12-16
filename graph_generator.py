@@ -10,6 +10,9 @@ class GraphGenerator:
         self.available_num_of_connections = [1, 2, 3, 4, 5, 6]
         self.num_of_connections_probabilities = [0.05, 0.5, 0.2, 0.1, 0.10, 0.05]
         self.coupler_elbow_probabilities = [0.8, 0.2]
+        # TODO: Implement probabilities for the following connection types
+        # self.tee_or_three_way_elbow_probabilities = [0.8, 0.2]
+        # self.four_way_tee_or_four_way_elbow_probabilities = [0.8, 0.2]
         self.connection_types = ["x", "-x", "y", "-y", "z", "-z"]
 
     #####################

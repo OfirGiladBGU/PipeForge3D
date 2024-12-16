@@ -184,35 +184,51 @@ def test_tee_xxz2(output_path):
 
 
 def test_tee_xyy1(output_path):
-    pass
+    positions = [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, -1, 0)]
+    active_connection_lists = [["x", "y", "-y"], ["x", "-x"], ["y", "-y"], ["y", "-y"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_tee_xyy2(output_path):
-    pass
+    positions = [(0, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0)]
+    active_connection_lists = [["-x", "y", "-y"], ["x", "-x"], ["y", "-y"], ["y", "-y"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_tee_yyz1(output_path):
-    pass
+    positions = [(0, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1)]
+    active_connection_lists = [["y", "-y", "z"], ["y", "-y"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_tee_yyz2(output_path):
-    pass
+    positions = [(0, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, -1)]
+    active_connection_lists = [["y", "-y", "-z"], ["y", "-y"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_tee_xzz1(output_path):
-    pass
+    positions = [(0, 0, 0), (1, 0, 0), (0, 0, 1), (0, 0, -1)]
+    active_connection_lists = [["x", "z", "-z"], ["x", "-x"], ["z", "-z"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_tee_xzz2(output_path):
-    pass
+    positions = [(0, 0, 0), (-1, 0, 0), (0, 0, 1), (0, 0, -1)]
+    active_connection_lists = [["-x", "z", "-z"], ["x", "-x"], ["z", "-z"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_tee_yzz1(output_path):
-    pass
+    positions = [(0, 0, 0), (0, 1, 0), (0, 0, 1), (0, 0, -1)]
+    active_connection_lists = [["y", "z", "-z"], ["y", "-y"], ["z", "-z"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_tee_yzz2(output_path):
-    pass
+    positions = [(0, 0, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
+    active_connection_lists = [["-y", "z", "-z"], ["y", "-y"], ["z", "-z"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 # Test Cross
@@ -296,7 +312,6 @@ def tests():
 
     test_tee_yzz1(output_path=os.path.join(tests_path, "tee_yzz1.obj"))
     test_tee_yzz2(output_path=os.path.join(tests_path, "tee_yzz2.obj"))
-
 
     # Test ThreeWayElbow
 

@@ -139,7 +139,7 @@ class MeshBuilder:
                 pass
 
             if {"y", "-y", "z"}.issubset(connections):
-                pass
+                pass # No need to rotate the tee
             if {"y", "-y", "-z"}.issubset(connections):
                 pass
 
