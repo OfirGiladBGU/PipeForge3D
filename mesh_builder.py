@@ -46,20 +46,20 @@ class MeshBuilder:
 
         # Rotation (In the origin)
         if {"x"}.issubset(connections):
-            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, -1]))
-        if {"-x"}.issubset(connections):
             mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
+        if {"-x"}.issubset(connections):
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, -1]))
 
         if {"y"}.issubset(connections):
-            pass  # No need to rotate the cap
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
         if {"-y"}.issubset(connections):
-            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
-            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
+            pass  # No need to rotate the cap
 
         if {"z"}.issubset(connections):
-            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
-        if {"-z"}.issubset(connections):
             mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
+        if {"-z"}.issubset(connections):
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
 
         # Translation
         self.apply_translation(mesh=mesh, position=position)
@@ -304,37 +304,37 @@ def build_test_mesh(gg, positions: list, active_connection_lists: list, output_p
 # Test Cap
 def test_cap_x1(gg, output_path):
     positions = [(0, 0, 0), (1, 0, 0)]
-    active_connection_lists = [["x", "-x"], ["x"]]
+    active_connection_lists = [["x"], ["x", "-x"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_cap_x2(gg, output_path):
     positions = [(0, 0, 0), (-1, 0, 0)]
-    active_connection_lists = [["x", "-x"], ["-x"]]
+    active_connection_lists = [["-x"], ["x", "-x"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_cap_y1(gg, output_path):
     positions = [(0, 0, 0), (0, 1, 0)]
-    active_connection_lists = [["y", "-y"], ["y"]]
+    active_connection_lists = [["y"], ["y", "-y"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_cap_y2(gg, output_path):
     positions = [(0, 0, 0), (0, -1, 0)]
-    active_connection_lists = [["y", "-y"], ["-y"]]
+    active_connection_lists = [["-y"], ["y", "-y"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_cap_z1(gg, output_path):
     positions = [(0, 0, 0), (0, 0, 1)]
-    active_connection_lists = [["z", "-z"], ["z"]]
+    active_connection_lists = [["z"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_cap_z2(gg, output_path):
     positions = [(0, 0, 0), (0, 0, -1)]
-    active_connection_lists = [["z", "-z"], ["-z"]]
+    active_connection_lists = [["-z"], ["z", "-z"]]
     build_test_mesh(gg=gg, positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
