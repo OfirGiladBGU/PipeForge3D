@@ -242,12 +242,12 @@ class GraphGenerator:
 ########
 def test():
     # Parameters
-    num_nodes = 20
+    num_of_nodes = 20
     scale = 1
 
     # Generate and plot the graph
     gg = GraphGenerator()
-    nodes_data, position_to_node_map = gg.generate_random_3d_nodes_structure(num_nodes=num_nodes)
+    nodes_data, position_to_node_map = gg.generate_random_3d_nodes_structure(num_of_nodes=num_of_nodes)
     graph = gg.generate_graph_3d(nodes_data=nodes_data, position_to_node_map=position_to_node_map)
     gg.plot_graph_3d(graph=graph, scale=scale)
 
