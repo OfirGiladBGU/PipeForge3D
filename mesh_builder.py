@@ -271,17 +271,18 @@ class MeshBuilder:
         if {"x", "-x", "y", "-y", "z"}.issubset(connections):
             pass  # No need to rotate the five-way tee
         elif {"x", "-x", "y", "-y", "-z"}.issubset(connections):
-            pass
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
 
         elif {"x", "-x", "y", "z", "-z"}.issubset(connections):
-            pass
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
         elif {"x", "-x", "-y", "z", "-z"}.issubset(connections):
-            pass
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
 
         elif {"x", "y", "-y", "z", "-z"}.issubset(connections):
-            pass
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
         elif {"-x", "y", "-y", "z", "-z"}.issubset(connections):
-            pass
+            mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, -1, 0]))
 
         else:
             raise ValueError("Invalid connections for five way tee")
