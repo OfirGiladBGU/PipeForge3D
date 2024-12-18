@@ -337,7 +337,7 @@ def test_four_way_tee_xyyz2(output_path):
 
 
 def test_four_way_tee_xyyz3(output_path):
-    positions = [(0, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, -1)]
+    positions = [(0, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1)]
     active_connection_lists = [["-x", "y", "-y", "z"], ["x", "-x"], ["y", "-y"], ["y", "-y"], ["z", "-z"]]
     build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
