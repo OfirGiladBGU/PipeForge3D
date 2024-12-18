@@ -374,27 +374,39 @@ def test_four_way_tee_xyzz4(output_path):
 
 # Test FiveWayTee
 def test_five_way_tee_xxyyz1(output_path):
-    pass
+    positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1)]
+    active_connection_lists = [["x", "-x", "y", "-y", "z"], ["x", "-x"], ["x", "-x"], ["y", "-y"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_five_way_tee_xxyyz2(output_path):
-    pass
+    positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, -1)]
+    active_connection_lists = [["x", "-x", "y", "-y", "-z"], ["x", "-x"], ["x", "-x"], ["y", "-y"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_five_way_tee_xxyzz1(output_path):
-    pass
+    positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, 0, 1), (0, 0, -1)]
+    active_connection_lists = [["x", "-x", "y", "z", "-z"], ["x", "-x"], ["x", "-x"], ["y", "-y"], ["z", "-z"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_five_way_tee_xxyzz2(output_path):
-    pass
+    positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
+    active_connection_lists = [["x", "-x", "-y", "z", "-z"], ["x", "-x"], ["x", "-x"], ["y", "-y"], ["z", "-z"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_five_way_tee_xyyzz1(output_path):
-    pass
+    positions = [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
+    active_connection_lists = [["x", "y", "-y", "z", "-z"], ["x", "-x"], ["y", "-y"], ["y", "-y"], ["z", "-z"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_five_way_tee_xyyzz2(output_path):
-    pass
+    positions = [(0, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
+    active_connection_lists = [["-x", "y", "-y", "z", "-z"], ["x", "-x"], ["y", "-y"], ["y", "-y"], ["z", "-z"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 # Test Hexagonal
