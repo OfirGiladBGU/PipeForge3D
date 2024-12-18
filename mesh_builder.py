@@ -179,7 +179,7 @@ class MeshBuilder:
 
     def cross_or_four_way_tee(self, position: tuple, connections: list):
         stripped_connections = set([connection.strip("-") for connection in connections])
-        if {"x", "y", "z"}.issubset(stripped_connections):  # Cross
+        if not {"x", "y", "z"}.issubset(stripped_connections):  # Cross
             mesh = self.pipe_meshes[ConnectionTypes.Cross].copy()
 
             # Rotation (In the origin)
