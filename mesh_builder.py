@@ -239,7 +239,7 @@ class MeshBuilder:
             elif {"x", "y", "-y", "-z"}.issubset(connections):
                 pass
             elif {"-x", "y", "-y", "z"}.issubset(connections):
-                pass
+                pass  # No need to rotate the four-way tee
             elif {"-x", "y", "-y", "-z"}.issubset(connections):
                 pass
 
@@ -264,7 +264,7 @@ class MeshBuilder:
 
         # Rotation (In the origin)
         if {"x", "-x", "y", "-y", "z"}.issubset(connections):
-            pass
+            pass  # No need to rotate the five-way tee
         elif {"x", "-x", "y", "-y", "-z"}.issubset(connections):
             pass
 
