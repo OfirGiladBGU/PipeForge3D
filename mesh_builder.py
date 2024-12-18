@@ -4,7 +4,8 @@ import os
 import networkx as nx
 import numpy as np
 import trimesh
-from typing import Callable
+import open3d as o3d
+from typing import Callable, Union
 
 
 class ConnectionTypes(Enum):
@@ -301,7 +302,14 @@ class MeshBuilder:
         self.apply_translation(mesh=mesh, position=position)
         return mesh
 
-    def build_mesh(self, graph: nx.Graph, output_path="combined_mesh.obj"):
+    def build_mesh(self, graph: nx.Graph, output_filepath=None) -> trimesh.Trimesh:
+        """
+        Convert the graph to a mesh and save it to a file.
+        Supported formats are stl, off, ply, collada, json, dict, glb, dict64, msgpack.
+        :param graph:
+        :param output_filepath:
+        :return:
+        """
         position_dict = nx.get_node_attributes(graph, "position")
         connections_dict = nx.get_node_attributes(graph, "connections")
 
@@ -320,8 +328,29 @@ class MeshBuilder:
                 )
                 mesh_list.append(mesh)
 
-        combined_mesh = trimesh.util.concatenate(mesh_list)
-        combined_mesh.export(output_path)
+        combined_mesh: trimesh.Trimesh = trimesh.util.concatenate(mesh_list)
+        if output_filepath is not None:
+            combined_mesh.export(file_obj=output_filepath)
+        return combined_mesh
+
+    def build_pcd(self, input_object: Union[nx.Graph, trimesh.Trimesh],
+                  percentage: float = 0.001,
+                  output_filepath=None) -> o3d.geometry.PointCloud:
+        if isinstance(input_object, nx.Graph):
+            mesh = self.build_mesh(graph=input_object)
+        elif isinstance(input_object, trimesh.Trimesh):
+            mesh = input_object
+        else:
+            raise ValueError("Invalid input object")
+
+        count = int(len(mesh.vertices) * percentage)
+        points = mesh.sample(count=count)
+
+        pcd = o3d.geometry.PointCloud()
+        pcd.points = o3d.utility.Vector3dVector(points)
+        if output_filepath is not None:
+            o3d.io.write_point_cloud(filename=output_filepath, pointcloud=pcd)
+        return pcd
 
 
 def test():
@@ -339,7 +368,8 @@ def test():
 
     # Build the mesh
     mb = MeshBuilder()
-    mb.build_mesh(graph=graph, output_path="output.obj")
+    mb.build_mesh(graph=graph, output_filepath="output.obj")
+    mb.build_pcd(input_object=graph, percentage=1, output_filepath="output.pcd")
 
 
 if __name__ == '__main__':

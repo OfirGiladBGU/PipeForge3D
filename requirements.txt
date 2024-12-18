@@ -1,3 +1,4 @@
+# Python 3.10.11
 networkx
 matplotlib
 trimesh
@@ -6,3 +7,6 @@ numpy
 # trimesh show
 pyglet
 scipy
+
+# pcd save/show
+open3d
