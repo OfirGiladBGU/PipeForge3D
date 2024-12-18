@@ -177,21 +177,26 @@ class MeshBuilder:
 
             # Rotation (In the origin)
             if {"x", "y", "z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
             elif {"x", "y", "-z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
             elif {"x", "-y", "z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
             elif {"x", "-y", "-z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
             elif {"-x", "y", "z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
             elif {"-x", "y", "-z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
             elif {"-x", "-y", "z"}.issubset(connections):
-                pass
+                pass  # No need to rotate the three-way elbow
             elif {"-x", "-y", "-z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
 
             else:
                 raise ValueError("Invalid connections for three way elbow")
