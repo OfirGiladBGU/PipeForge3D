@@ -412,7 +412,7 @@ def test_five_way_tee_xyyzz2(output_path):
 # Test Hexagonal
 def test_hexagonal(output_path):
     positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
-    active_connection_lists = [["x", "x", "y", "-y", "z", "-z"], ["x", "-x"], ["x", "-x"], ["y", "-y"], ["y", "-y"], ["z", "-z"], ["z", "-z"]]
+    active_connection_lists = [["x", "-x", "y", "-y", "z", "-z"], ["x", "-x"], ["x", "-x"], ["y", "-y"], ["y", "-y"], ["z", "-z"], ["z", "-z"]]
     build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
