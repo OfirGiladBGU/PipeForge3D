@@ -47,19 +47,22 @@ class MeshBuilder:
         # Rotation (In the origin)
         if {"x"}.issubset(connections):
             mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
-        if {"-x"}.issubset(connections):
+        elif {"-x"}.issubset(connections):
             mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, -1]))
 
-        if {"y"}.issubset(connections):
+        elif {"y"}.issubset(connections):
             mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
             mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
-        if {"-y"}.issubset(connections):
+        elif {"-y"}.issubset(connections):
             pass  # No need to rotate the cap
 
-        if {"z"}.issubset(connections):
+        elif {"z"}.issubset(connections):
             mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
-        if {"-z"}.issubset(connections):
+        elif {"-z"}.issubset(connections):
             mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
+
+        else:
+            raise ValueError("Invalid connections for cap")
 
         # Translation
         self.apply_translation(mesh=mesh, position=position)
@@ -72,10 +75,14 @@ class MeshBuilder:
             # Rotation (In the origin)
             if {"x", "-x"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
-            if {"y", "-y"}.issubset(connections):
+            elif {"y", "-y"}.issubset(connections):
                 pass  # No need to rotate the coupler
-            if {"z", "-z"}.issubset(connections):
+            elif {"z", "-z"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
+
+            else:
+                raise ValueError("Invalid connections for coupler")
+
         else:  # Elbow
             mesh = self.pipe_meshes[ConnectionTypes.Elbow].copy()
 
@@ -83,35 +90,37 @@ class MeshBuilder:
             if {"x", "y"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
-                pass  # No need to rotate the elbow
-            if {"x", "-y"}.issubset(connections):
+            elif {"x", "-y"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
-            if {"-x", "y"}.issubset(connections):
+            elif {"-x", "y"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, -1, 0]))
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, -1]))
-            if {"-x", "-y"}.issubset(connections):
+            elif {"-x", "-y"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, -1, 0]))
             
-            if {"x", "z"}.issubset(connections):
+            elif {"x", "z"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
-            if {"x", "-z"}.issubset(connections):
+            elif {"x", "-z"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
-            if {"-x", "z"}.issubset(connections):
+            elif {"-x", "z"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, -1]))
-            if {"-x", "-z"}.issubset(connections):
+            elif {"-x", "-z"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, -1]))
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, -1, 0]))
             
-            if {"y", "z"}.issubset(connections):
+            elif {"y", "z"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
-            if {"y", "-z"}.issubset(connections):
+            elif {"y", "-z"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
-            if {"-y", "z"}.issubset(connections):
+            elif {"-y", "z"}.issubset(connections):
                 pass  # No need to rotate the elbow
-            if {"-y", "-z"}.issubset(connections):
+            elif {"-y", "-z"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
+
+            else:
+                raise ValueError("Invalid connections for elbow")
 
         # Translation
         self.apply_translation(mesh=mesh, position=position)
@@ -125,53 +134,60 @@ class MeshBuilder:
             # Rotation (In the origin)
             if {"x", "-x", "y"}.issubset(connections):
                 pass
-            if {"x", "-x", "-y"}.issubset(connections):
+            elif {"x", "-x", "-y"}.issubset(connections):
                 pass
 
-            if {"x", "-x", "z"}.issubset(connections):
+            elif {"x", "-x", "z"}.issubset(connections):
                 pass
-            if {"x", "-x", "-z"}.issubset(connections):
-                pass
-
-            if {"x", "y", "-y"}.issubset(connections):
-                pass
-            if {"-x", "y", "-y"}.issubset(connections):
+            elif {"x", "-x", "-z"}.issubset(connections):
                 pass
 
-            if {"y", "-y", "z"}.issubset(connections):
-                pass # No need to rotate the tee
-            if {"y", "-y", "-z"}.issubset(connections):
+            elif {"x", "y", "-y"}.issubset(connections):
+                pass
+            elif {"-x", "y", "-y"}.issubset(connections):
                 pass
 
-            if {"x", "z", "-z"}.issubset(connections):
-                pass
-            if {"-x", "z", "-z",}.issubset(connections):
+            elif {"y", "-y", "z"}.issubset(connections):
+                pass  # No need to rotate the tee
+            elif {"y", "-y", "-z"}.issubset(connections):
                 pass
 
-            if {"y", "z", "-z"}.issubset(connections):
+            elif {"x", "z", "-z"}.issubset(connections):
                 pass
-            if {"-y", "z", "-z"}.issubset(connections):
+            elif {"-x", "z", "-z"}.issubset(connections):
                 pass
+
+            elif {"y", "z", "-z"}.issubset(connections):
+                pass
+            elif {"-y", "z", "-z"}.issubset(connections):
+                pass
+
+            else:
+                raise ValueError("Invalid connections for tee")
+
         else:  # Three-Way Elbow
             mesh = self.pipe_meshes[ConnectionTypes.ThreeWayElbow].copy()
 
             # Rotation (In the origin)
             if {"x", "y", "z"}.issubset(connections):
                 pass
-            if {"x", "y", "-z"}.issubset(connections):
+            elif {"x", "y", "-z"}.issubset(connections):
                 pass
-            if {"x", "-y", "z"}.issubset(connections):
+            elif {"x", "-y", "z"}.issubset(connections):
                 pass
-            if {"x", "-y", "-z"}.issubset(connections):
+            elif {"x", "-y", "-z"}.issubset(connections):
                 pass
-            if {"-x", "y", "z"}.issubset(connections):
+            elif {"-x", "y", "z"}.issubset(connections):
                 pass
-            if {"-x", "y", "-z"}.issubset(connections):
+            elif {"-x", "y", "-z"}.issubset(connections):
                 pass
-            if {"-x", "-y", "z"}.issubset(connections):
+            elif {"-x", "-y", "z"}.issubset(connections):
                 pass
-            if {"-x", "-y", "-z"}.issubset(connections):
+            elif {"-x", "-y", "-z"}.issubset(connections):
                 pass
+
+            else:
+                raise ValueError("Invalid connections for three way elbow")
 
         # Translation
         self.apply_translation(mesh=mesh, position=position)
@@ -185,40 +201,47 @@ class MeshBuilder:
             # Rotation (In the origin)
             if {"x", "-x", "y", "-y"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
-            if {"x", "-x", "z", "-z"}.issubset(connections):
+            elif {"x", "-x", "z", "-z"}.issubset(connections):
                 mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
-            if {"y", "-y", "z", "-z"}.issubset(connections):
+            elif {"y", "-y", "z", "-z"}.issubset(connections):
                 pass  # No need to rotate the cross
+
+            else:
+                raise ValueError("Invalid connections for cross")
+
         else:  # Four-Way Tee
             mesh = self.pipe_meshes[ConnectionTypes.FourWayTee].copy()
 
             # Rotation (In the origin)
             if {"x", "-x", "y", "z"}.issubset(connections):
                 pass
-            if {"x", "-x", "y", "-z"}.issubset(connections):
+            elif {"x", "-x", "y", "-z"}.issubset(connections):
                 pass
-            if {"x", "-x", "-y", "z"}.issubset(connections):
+            elif {"x", "-x", "-y", "z"}.issubset(connections):
                 pass
-            if {"x", "-x", "-y", "-z"}.issubset(connections):
-                pass
-
-            if {"x", "y", "-y", "z"}.issubset(connections):
-                pass
-            if {"x", "y", "-y", "-z"}.issubset(connections):
-                pass
-            if {"-x", "y", "-y", "z"}.issubset(connections):
-                pass
-            if {"-x", "y", "-y", "-z"}.issubset(connections):
+            elif {"x", "-x", "-y", "-z"}.issubset(connections):
                 pass
 
-            if {"x", "y", "z", "-z"}.issubset(connections):
+            elif {"x", "y", "-y", "z"}.issubset(connections):
                 pass
-            if {"x", "-y", "z", "-z"}.issubset(connections):
+            elif {"x", "y", "-y", "-z"}.issubset(connections):
                 pass
-            if {"-x", "y", "z", "-z"}.issubset(connections):
+            elif {"-x", "y", "-y", "z"}.issubset(connections):
                 pass
-            if {"-x", "-y", "z", "-z"}.issubset(connections):
+            elif {"-x", "y", "-y", "-z"}.issubset(connections):
                 pass
+
+            elif {"x", "y", "z", "-z"}.issubset(connections):
+                pass
+            elif {"x", "-y", "z", "-z"}.issubset(connections):
+                pass
+            elif {"-x", "y", "z", "-z"}.issubset(connections):
+                pass
+            elif {"-x", "-y", "z", "-z"}.issubset(connections):
+                pass
+
+            else:
+                raise ValueError("Invalid connections for four way tee")
 
         # Translation
         self.apply_translation(mesh=mesh, position=position)
@@ -230,18 +253,21 @@ class MeshBuilder:
         # Rotation (In the origin)
         if {"x", "-x", "y", "-y", "z"}.issubset(connections):
             pass
-        if {"x", "-x", "y", "-y", "-z"}.issubset(connections):
+        elif {"x", "-x", "y", "-y", "-z"}.issubset(connections):
             pass
 
-        if {"x", "-x", "y", "z", "-z"}.issubset(connections):
+        elif {"x", "-x", "y", "z", "-z"}.issubset(connections):
             pass
-        if {"x", "-x", "-y", "z", "-z"}.issubset(connections):
+        elif {"x", "-x", "-y", "z", "-z"}.issubset(connections):
             pass
 
-        if {"x", "y", "-y", "z", "-z"}.issubset(connections):
+        elif {"x", "y", "-y", "z", "-z"}.issubset(connections):
             pass
-        if {"-x", "y", "-y", "z", "-z"}.issubset(connections):
+        elif {"-x", "y", "-y", "z", "-z"}.issubset(connections):
             pass
+
+        else:
+            raise ValueError("Invalid connections for five way tee")
 
         # Translation
         self.apply_translation(mesh=mesh, position=position)
@@ -250,11 +276,14 @@ class MeshBuilder:
     def hexagonal(self, position: tuple, connections: list):
         mesh = self.pipe_meshes[ConnectionTypes.Hexagonal].copy()
 
+        if not {"x", "-x", "y", "-y", "z", "-z"}.issubset(connections):
+            raise ValueError("Invalid connections for hexagonal")
+
         # Translation (No need to rotate the hexagonal)
         self.apply_translation(mesh=mesh, position=position)
         return mesh
 
-    def build_mesh(self, graph: nx.Graph, output_path = "combined_mesh.obj"):
+    def build_mesh(self, graph: nx.Graph, output_path="combined_mesh.obj"):
         position_dict = nx.get_node_attributes(graph, "position")
         connections_dict = nx.get_node_attributes(graph, "connections")
 

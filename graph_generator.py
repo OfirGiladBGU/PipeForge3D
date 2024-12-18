@@ -54,9 +54,9 @@ class GraphGenerator:
         return node_position[0] + dx, node_position[1] + dy, node_position[2] + dz
 
     def get_node_active_and_invalid_connection_lists(self,
-                                                node_position: tuple,
-                                                nodes_data: dict,
-                                                position_to_node_map: dict) -> tuple:
+                                                     node_position: tuple,
+                                                     nodes_data: dict,
+                                                     position_to_node_map: dict) -> tuple:
         active_connection_list = []
         invalid_connection_list = []
 
@@ -82,7 +82,9 @@ class GraphGenerator:
                                         min_num_of_connections: int,
                                         active_connection_list: list,
                                         invalid_connection_list: list) -> list:
-        selectable_connection = list(set(self.connection_types) - set(active_connection_list) - set(invalid_connection_list))
+        selectable_connection = set(self.connection_types) - set(active_connection_list) - set(invalid_connection_list)
+        selectable_connection = list(selectable_connection)
+
         num_of_selectable_connections = len(selectable_connection)
         num_of_choices_available = min_num_of_connections - len(active_connection_list)
 
