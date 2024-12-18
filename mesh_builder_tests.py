@@ -231,6 +231,55 @@ def test_tee_yzz2(output_path):
     build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
+# Test ThreeWayElbow
+def test_three_way_elbow_xyz1(output_path):
+    positions = [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1)]
+    active_connection_lists = [["x", "y", "z"], ["x", "-x"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def test_three_way_elbow_xyz2(output_path):
+    positions = [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, -1)]
+    active_connection_lists = [["x", "y", "-z"], ["x", "-x"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def test_three_way_elbow_xyz3(output_path):
+    positions = [(0, 0, 0), (1, 0, 0), (0, -1, 0), (0, 0, 1)]
+    active_connection_lists = [["x", "-y", "z"], ["x", "-x"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def test_three_way_elbow_xyz4(output_path):
+    positions = [(0, 0, 0), (1, 0, 0), (0, -1, 0), (0, 0, -1)]
+    active_connection_lists = [["x", "-y", "-z"], ["x", "-x"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def test_three_way_elbow_xyz5(output_path):
+    positions = [(0, 0, 0), (-1, 0, 0), (0, 1, 0), (0, 0, 1)]
+    active_connection_lists = [["-x", "y", "z"], ["x", "-x"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def test_three_way_elbow_xyz6(output_path):
+    positions = [(0, 0, 0), (-1, 0, 0), (0, 1, 0), (0, 0, -1)]
+    active_connection_lists = [["-x", "y", "-z"], ["x", "-x"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def test_three_way_elbow_xyz7(output_path):
+    positions = [(0, 0, 0), (-1, 0, 0), (0, -1, 0), (0, 0, 1)]
+    active_connection_lists = [["-x", "-y", "z"], ["x", "-x"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
+def test_three_way_elbow_xyz8(output_path):
+    positions = [(0, 0, 0), (-1, 0, 0), (0, -1, 0), (0, 0, -1)]
+    active_connection_lists = [["-x", "-y", "-z"], ["x", "-x"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
+
+
 # Test Cross
 def test_cross_xxyy(output_path):
     positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0)]
@@ -250,8 +299,87 @@ def test_cross_yyzz(output_path):
     build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
-# Custom Test
-def custom_test(output_path):
+# Test FourWayTee
+def test_four_way_tee_xxyz1(output_path):
+    pass
+
+
+def test_four_way_tee_xxyz2(output_path):
+    pass
+
+
+def test_four_way_tee_xxyz3(output_path):
+    pass
+
+
+def test_four_way_tee_xxyz4(output_path):
+    pass
+
+
+def test_four_way_tee_xyyz1(output_path):
+    pass
+
+
+def test_four_way_tee_xyyz2(output_path):
+    pass
+
+
+def test_four_way_tee_xyyz3(output_path):
+    pass
+
+
+def test_four_way_tee_xyyz4(output_path):
+    pass
+
+
+def test_four_way_tee_xyzz1(output_path):
+    pass
+
+
+def test_four_way_tee_xyzz2(output_path):
+    pass
+
+
+def test_four_way_tee_xyzz3(output_path):
+    pass
+
+
+def test_four_way_tee_xyzz4(output_path):
+    pass
+
+
+# Test FiveWayTee
+def test_five_way_tee_xxyyz1(output_path):
+    pass
+
+
+def test_five_way_tee_xxyyz2(output_path):
+    pass
+
+
+def test_five_way_tee_xxyzz1(output_path):
+    pass
+
+
+def test_five_way_tee_xxyzz2(output_path):
+    pass
+
+
+def test_five_way_tee_xyyzz1(output_path):
+    pass
+
+
+def test_five_way_tee_xyyzz2(output_path):
+    pass
+
+
+# Test Hexagonal
+def test_hexagonal(output_path):
+    pass
+
+
+# Test Custom
+def test_custom(output_path):
     positions = [(2, 0, 0), (1, 0, 0), (2, 1, 0)]
     active_connection_lists = [['-x', 'y'], ['-x', 'x'], ['-y', 'z', '-z']]
     build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
@@ -314,6 +442,14 @@ def tests():
     test_tee_yzz2(output_path=os.path.join(tests_path, "tee_yzz2.obj"))
 
     # Test ThreeWayElbow
+    test_three_way_elbow_xyz1(output_path=os.path.join(tests_path, "three_way_elbow_xyz1.obj"))
+    test_three_way_elbow_xyz2(output_path=os.path.join(tests_path, "three_way_elbow_xyz2.obj"))
+    test_three_way_elbow_xyz3(output_path=os.path.join(tests_path, "three_way_elbow_xyz3.obj"))
+    test_three_way_elbow_xyz4(output_path=os.path.join(tests_path, "three_way_elbow_xyz4.obj"))
+    test_three_way_elbow_xyz5(output_path=os.path.join(tests_path, "three_way_elbow_xyz5.obj"))
+    test_three_way_elbow_xyz6(output_path=os.path.join(tests_path, "three_way_elbow_xyz6.obj"))
+    test_three_way_elbow_xyz7(output_path=os.path.join(tests_path, "three_way_elbow_xyz7.obj"))
+    test_three_way_elbow_xyz8(output_path=os.path.join(tests_path, "three_way_elbow_xyz8.obj"))
 
     # Test Cross
     test_cross_xxyy(output_path=os.path.join(tests_path, "cross_xxyy.obj"))
@@ -323,13 +459,36 @@ def tests():
     test_cross_yyzz(output_path=os.path.join(tests_path, "cross_yyzz.obj"))
 
     # Test FourWayTee
+    test_four_way_tee_xxyz1(output_path=os.path.join(tests_path, "four_way_tee_xxyz1.obj"))
+    test_four_way_tee_xxyz2(output_path=os.path.join(tests_path, "four_way_tee_xxyz2.obj"))
+    test_four_way_tee_xxyz3(output_path=os.path.join(tests_path, "four_way_tee_xxyz3.obj"))
+    test_four_way_tee_xxyz4(output_path=os.path.join(tests_path, "four_way_tee_xxyz4.obj"))
 
-    # Test FiveWayCross
+    test_four_way_tee_xyyz1(output_path=os.path.join(tests_path, "four_way_tee_xyyz1.obj"))
+    test_four_way_tee_xyyz2(output_path=os.path.join(tests_path, "four_way_tee_xyyz2.obj"))
+    test_four_way_tee_xyyz3(output_path=os.path.join(tests_path, "four_way_tee_xyyz3.obj"))
+    test_four_way_tee_xyyz4(output_path=os.path.join(tests_path, "four_way_tee_xyyz4.obj"))
+
+    test_four_way_tee_xyzz1(output_path=os.path.join(tests_path, "four_way_tee_xyzz1.obj"))
+    test_four_way_tee_xyzz2(output_path=os.path.join(tests_path, "four_way_tee_xyzz2.obj"))
+    test_four_way_tee_xyzz3(output_path=os.path.join(tests_path, "four_way_tee_xyzz3.obj"))
+    test_four_way_tee_xyzz4(output_path=os.path.join(tests_path, "four_way_tee_xyzz4.obj"))
+
+    # Test FiveWayTee
+    test_five_way_tee_xxyyz1(output_path=os.path.join(tests_path, "five_way_tee_xxyyz1.obj"))
+    test_five_way_tee_xxyyz2(output_path=os.path.join(tests_path, "five_way_tee_xxyyz2.obj"))
+
+    test_five_way_tee_xxyzz1(output_path=os.path.join(tests_path, "five_way_tee_xxyzz1.obj"))
+    test_five_way_tee_xxyzz2(output_path=os.path.join(tests_path, "five_way_tee_xxyzz2.obj"))
+
+    test_five_way_tee_xyyzz1(output_path=os.path.join(tests_path, "five_way_tee_xyyzz1.obj"))
+    test_five_way_tee_xyyzz2(output_path=os.path.join(tests_path, "five_way_tee_xyyzz2.obj"))
 
     # Test Hexagonal
+    test_hexagonal(output_path=os.path.join(tests_path, "hexagonal.obj"))
 
-    # Custom Test
-    custom_test(output_path=os.path.join(tests_path, "custom.obj"))
+    # Test Custom
+    test_custom(output_path=os.path.join(tests_path, "custom.obj"))
 
 
 if __name__ == '__main__':

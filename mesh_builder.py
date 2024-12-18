@@ -152,7 +152,6 @@ class MeshBuilder:
                 pass
             if {"-y", "z", "-z"}.issubset(connections):
                 pass
-
         else:  # Three-Way Elbow
             mesh = self.pipe_meshes[ConnectionTypes.ThreeWayElbow].copy()
 
@@ -180,7 +179,17 @@ class MeshBuilder:
 
     def cross_or_four_way_tee(self, position: tuple, connections: list):
         stripped_connections = set([connection.strip("-") for connection in connections])
-        if {"x", "y", "z"}.issubset(stripped_connections):  # Four-Way Tee
+        if {"x", "y", "z"}.issubset(stripped_connections):  # Cross
+            mesh = self.pipe_meshes[ConnectionTypes.Cross].copy()
+
+            # Rotation (In the origin)
+            if {"x", "-x", "y", "-y"}.issubset(connections):
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
+            if {"x", "-x", "z", "-z"}.issubset(connections):
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
+            if {"y", "-y", "z", "-z"}.issubset(connections):
+                pass  # No need to rotate the cross
+        else:  # Four-Way Tee
             mesh = self.pipe_meshes[ConnectionTypes.FourWayTee].copy()
 
             # Rotation (In the origin)
@@ -210,17 +219,6 @@ class MeshBuilder:
                 pass
             if {"-x", "-y", "z", "-z"}.issubset(connections):
                 pass
-
-        else: # Cross
-            mesh = self.pipe_meshes[ConnectionTypes.Cross].copy()
-
-            # Rotation (In the origin)
-            if {"x", "-x", "y", "-y"}.issubset(connections):
-                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
-            if {"x", "-x", "z", "-z"}.issubset(connections):
-                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
-            if {"y", "-y", "z", "-z"}.issubset(connections):
-                pass  # No need to rotate the cross
 
         # Translation
         self.apply_translation(mesh=mesh, position=position)
