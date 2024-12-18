@@ -133,34 +133,41 @@ class MeshBuilder:
 
             # Rotation (In the origin)
             if {"x", "-x", "y"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
             elif {"x", "-x", "-y"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
 
             elif {"x", "-x", "z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
             elif {"x", "-x", "-z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 0, 1]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
 
             elif {"x", "y", "-y"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
             elif {"-x", "y", "-y"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, -1, 0]))
 
             elif {"y", "-y", "z"}.issubset(connections):
                 pass  # No need to rotate the tee
             elif {"y", "-y", "-z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
 
             elif {"x", "z", "-z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, 1, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
             elif {"-x", "z", "-z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[0, -1, 0]))
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
 
             elif {"y", "z", "-z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[-1, 0, 0]))
             elif {"-y", "z", "-z"}.issubset(connections):
-                pass
+                mesh.apply_transform(trimesh.transformations.rotation_matrix(angle=np.pi / 2, direction=[1, 0, 0]))
 
             else:
                 raise ValueError("Invalid connections for tee")
