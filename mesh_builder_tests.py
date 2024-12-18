@@ -301,51 +301,75 @@ def test_cross_yyzz(output_path):
 
 # Test FourWayTee
 def test_four_way_tee_xxyz1(output_path):
-    pass
+    positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, 0, 1)]
+    active_connection_lists = [["x", "-x", "y", "z"], ["x", "-x"], ["x", "-x"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_four_way_tee_xxyz2(output_path):
-    pass
+    positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, 0, -1)]
+    active_connection_lists = [["x", "-x", "y", "-z"], ["x", "-x"], ["x", "-x"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_four_way_tee_xxyz3(output_path):
-    pass
+    positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, -1, 0), (0, 0, 1)]
+    active_connection_lists = [["x", "-x", "-y", "z"], ["x", "-x"], ["x", "-x"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_four_way_tee_xxyz4(output_path):
-    pass
+    positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (0, -1, 0), (0, 0, -1)]
+    active_connection_lists = [["x", "-x", "-y", "-z"], ["x", "-x"], ["x", "-x"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_four_way_tee_xyyz1(output_path):
-    pass
+    positions = [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1)]
+    active_connection_lists = [["x", "y", "-y", "z"], ["x", "-x"], ["y", "-y"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_four_way_tee_xyyz2(output_path):
-    pass
+    positions = [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, -1)]
+    active_connection_lists = [["x", "y", "-y", "-z"], ["x", "-x"], ["y", "-y"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_four_way_tee_xyyz3(output_path):
-    pass
+    positions = [(0, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, -1)]
+    active_connection_lists = [["-x", "y", "-y", "z"], ["x", "-x"], ["y", "-y"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_four_way_tee_xyyz4(output_path):
-    pass
+    positions = [(0, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, -1)]
+    active_connection_lists = [["-x", "y", "-y", "-z"], ["x", "-x"], ["y", "-y"], ["y", "-y"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_four_way_tee_xyzz1(output_path):
-    pass
+    positions = [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1), (0, 0, -1)]
+    active_connection_lists = [["x", "y", "z", "-z"], ["x", "-x"], ["y", "-y"], ["z", "-z"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_four_way_tee_xyzz2(output_path):
-    pass
+    positions = [(0, 0, 0), (1, 0, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
+    active_connection_lists = [["x", "-y", "z", "-z"], ["x", "-x"], ["y", "-y"], ["z", "-z"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_four_way_tee_xyzz3(output_path):
-    pass
+    positions = [(0, 0, 0), (-1, 0, 0), (0, 1, 0), (0, 0, 1), (0, 0, -1)]
+    active_connection_lists = [["-x", "y", "z", "-z"], ["x", "-x"], ["y", "-y"], ["z", "-z"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 def test_four_way_tee_xyzz4(output_path):
-    pass
+    positions = [(0, 0, 0), (-1, 0, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
+    active_connection_lists = [["-x", "-y", "z", "-z"], ["x", "-x"], ["y", "-y"], ["z", "-z"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 # Test FiveWayTee
@@ -375,7 +399,9 @@ def test_five_way_tee_xyyzz2(output_path):
 
 # Test Hexagonal
 def test_hexagonal(output_path):
-    pass
+    positions = [(0, 0, 0), (1, 0, 0), (-1, 0, 0), (1, 0, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]
+    active_connection_lists = [["x", "x", "y", "-y", "z", "-z"], ["x", "-x"], ["x", "-x"], ["y", "-y"], ["y", "-y"], ["z", "-z"], ["z", "-z"]]
+    build_test_mesh(positions=positions, active_connection_lists=active_connection_lists, output_path=output_path)
 
 
 # Test Custom
