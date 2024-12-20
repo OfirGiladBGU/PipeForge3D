@@ -37,7 +37,7 @@ def main():
     pcd_percentage = 1.0
 
     # Mesh Parameters
-    mesh_dir = "pipe_parts"
+    mesh_dir = "connection_types"
     mesh_scale = 66
 
     generate_output_files(

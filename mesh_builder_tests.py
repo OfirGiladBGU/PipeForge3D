@@ -9,7 +9,7 @@ from mesh_builder import MeshBuilder
 # Tests #
 #########
 def build_test_mesh(positions: list, active_connection_lists: list, output_filepath: str):
-    mesh_dir = "pipe_parts"
+    mesh_dir = "connection_types"
     mesh_scale = 66
 
     # Build nodes_data and position_to_node_map

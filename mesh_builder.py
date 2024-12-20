@@ -364,7 +364,7 @@ def test():
     scale = 1
     percentage = 1.0
 
-    mesh_dir = "pipe_parts"
+    mesh_dir = "connection_types"
     mesh_scale = 66
 
     # Generate and plot the graph
