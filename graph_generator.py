@@ -1,3 +1,4 @@
+import json
 import random
 from collections import deque
 import networkx as nx
@@ -127,7 +128,7 @@ class GraphGenerator:
     ######################
     # Building functions #
     ######################
-    def generate_random_3d_nodes_structure(self, num_of_nodes: int):
+    def generate_random_3d_nodes_data(self, num_of_nodes: int, output_filepath=None) -> dict:
         current_num_of_nodes = 0
         nodes_data = {}
         position_to_node_map = {}
@@ -185,9 +186,14 @@ class GraphGenerator:
                     node_positions_queue.append(new_node_position)
                     current_num_of_nodes += 1
 
-        return nodes_data, position_to_node_map
+        if output_filepath is not None:
+            with open(output_filepath, "w") as fp:
+                json.dump(obj=nodes_data, fp=fp, indent=4)
+        return nodes_data
 
-    def generate_graph_3d(self, nodes_data: dict, position_to_node_map: dict) -> nx.Graph:
+    def generate_graph_3d(self, nodes_data: dict) -> nx.Graph:
+        position_to_node_map = {node_data["position"]: node_idx for node_idx, node_data in nodes_data.items()}
+
         graph = nx.Graph()
 
         # Add nodes
@@ -209,13 +215,14 @@ class GraphGenerator:
         return graph
 
     @staticmethod
-    def plot_graph_3d(graph: nx.Graph, scale: int = 1):
+    def plot_graph_3d(graph: nx.Graph, scale: int = 1, output_filepath=None):
         """
         Plot the 3D graph using matplotlib and display connections.
 
         Parameters:
             graph (networkx.Graph): A graph object.
             scale (int): A scale factor for the plot.
+            output_filepath (str): An output file path to save the plot (if not provided: plt.show() will be executed).
         """
         positions = nx.get_node_attributes(graph, "position")
 
@@ -235,8 +242,10 @@ class GraphGenerator:
             ax.scatter(x, y, z, c="blue", s=25)
             ax.text(x, y, z, s=str(node), color="red", fontsize=8)
 
-        # plt.show()
-        plt.savefig("graph.png")
+        if output_filepath is not None:
+            plt.savefig(output_filepath)
+        else:
+            plt.show()
 
 
 ########
@@ -249,8 +258,8 @@ def test():
 
     # Generate and plot the graph
     gg = GraphGenerator()
-    nodes_data, position_to_node_map = gg.generate_random_3d_nodes_structure(num_of_nodes=num_of_nodes)
-    graph = gg.generate_graph_3d(nodes_data=nodes_data, position_to_node_map=position_to_node_map)
+    nodes_data = gg.generate_random_3d_nodes_data(num_of_nodes=num_of_nodes)
+    graph = gg.generate_graph_3d(nodes_data=nodes_data)
     gg.plot_graph_3d(graph=graph, scale=scale)
 
 

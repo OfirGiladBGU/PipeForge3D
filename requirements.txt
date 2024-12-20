@@ -3,6 +3,7 @@ networkx
 matplotlib
 trimesh
 numpy
+tqdm
 
 # trimesh show
 pyglet

@@ -9,9 +9,11 @@ from mesh_builder import MeshBuilder
 # Tests #
 #########
 def build_test_mesh(positions: list, active_connection_lists: list, output_filepath: str):
+    mesh_dir = "pipe_parts"
+    mesh_scale = 66
+
     # Build nodes_data and position_to_node_map
     nodes_data = {}
-    position_to_node_map = {}
     num_of_nodes = len(positions)
     for i in range(num_of_nodes):
         nodes_data[i] = {
@@ -19,13 +21,12 @@ def build_test_mesh(positions: list, active_connection_lists: list, output_filep
             "active_connection_list": active_connection_lists[i],
             "invalid_connection_list": list(set(gg.connection_types) - set(active_connection_lists[i]))
         }
-        position_to_node_map[i] = positions[i]
 
     # Generate the graph
-    graph = gg.generate_graph_3d(nodes_data=nodes_data, position_to_node_map=position_to_node_map)
+    graph = gg.generate_graph_3d(nodes_data=nodes_data)
 
     # Build the mesh
-    mb = MeshBuilder()
+    mb = MeshBuilder(mesh_dir=mesh_dir, mesh_scale=mesh_scale)
     mb.build_mesh(graph=graph, output_filepath=output_filepath)
 
 

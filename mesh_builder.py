@@ -21,9 +21,9 @@ class ConnectionTypes(Enum):
 
 
 class MeshBuilder:
-    def __init__(self):
-        self.mesh_scale = 66
-        self.pipe_meshes_path = os.path.join(pathlib.Path(__file__).parent, "pipes")
+    def __init__(self, mesh_dir: str, mesh_scale: Union[int, float]):
+        self.pipe_meshes_path = os.path.join(pathlib.Path(__file__).parent, mesh_dir)
+        self.mesh_scale = mesh_scale
         self.pipe_meshes = {}
         for connection_type in ConnectionTypes:
             pipe_mesh_path = os.path.join(self.pipe_meshes_path, connection_type.value)
@@ -353,23 +353,30 @@ class MeshBuilder:
         return pcd
 
 
+########
+# Test #
+########
 def test():
     from graph_generator import GraphGenerator
 
     # Parameters
     num_of_nodes = 20
+    scale = 1
+    percentage = 1.0
+
+    mesh_dir = "pipe_parts"
+    mesh_scale = 66
 
     # Generate and plot the graph
     gg = GraphGenerator()
-    nodes_data, position_to_node_map = gg.generate_random_3d_nodes_structure(num_of_nodes=num_of_nodes)
-    graph = gg.generate_graph_3d(nodes_data=nodes_data, position_to_node_map=position_to_node_map)
-    # print(nodes_data)
-    gg.plot_graph_3d(graph=graph)
+    nodes_data = gg.generate_random_3d_nodes_data(num_of_nodes=num_of_nodes, output_filepath="output.json")
+    graph = gg.generate_graph_3d(nodes_data=nodes_data)
+    gg.plot_graph_3d(graph=graph, scale=scale, output_filepath="output.png")
 
     # Build the mesh
-    mb = MeshBuilder()
+    mb = MeshBuilder(mesh_dir=mesh_dir, mesh_scale=mesh_scale)
     mb.build_mesh(graph=graph, output_filepath="output.obj")
-    mb.build_pcd(input_object=graph, percentage=1, output_filepath="output.pcd")
+    mb.build_pcd(input_object=graph, percentage=percentage, output_filepath="output.pcd")
 
 
 if __name__ == '__main__':
