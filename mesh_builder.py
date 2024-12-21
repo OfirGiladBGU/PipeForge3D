@@ -302,12 +302,13 @@ class MeshBuilder:
         self.apply_translation(mesh=mesh, position=position)
         return mesh
 
-    def build_mesh(self, graph: nx.Graph, output_filepath=None) -> trimesh.Trimesh:
+    def build_mesh(self, graph: nx.Graph, output_filepath=None, output_only: bool = False) -> trimesh.Trimesh:
         """
         Convert the graph to a mesh and save it to a file.
         Supported formats are stl, off, ply, collada, json, dict, glb, dict64, msgpack.
         :param graph:
         :param output_filepath:
+        :param output_only:
         :return:
         """
         position_dict = nx.get_node_attributes(graph, "position")
@@ -329,15 +330,19 @@ class MeshBuilder:
                 mesh_list.append(mesh)
 
         combined_mesh: trimesh.Trimesh = trimesh.util.concatenate(mesh_list)
-        if output_filepath is not None:
-            combined_mesh.export(file_obj=output_filepath)
+        if output_only is False:
+            if output_filepath is not None:
+                combined_mesh.export(file_obj=output_filepath)
+            else:
+                combined_mesh.show()
         return combined_mesh
 
     def build_pcd(self, input_object: Union[nx.Graph, trimesh.Trimesh],
                   percentage: float = 0.001,
-                  output_filepath=None) -> o3d.geometry.PointCloud:
+                  output_filepath=None,
+                  output_only: bool = False) -> o3d.geometry.PointCloud:
         if isinstance(input_object, nx.Graph):
-            mesh = self.build_mesh(graph=input_object)
+            mesh = self.build_mesh(graph=input_object, output_only=True)
         elif isinstance(input_object, trimesh.Trimesh):
             mesh = input_object
         else:
@@ -348,8 +353,11 @@ class MeshBuilder:
 
         pcd = o3d.geometry.PointCloud()
         pcd.points = o3d.utility.Vector3dVector(points)
-        if output_filepath is not None:
-            o3d.io.write_point_cloud(filename=output_filepath, pointcloud=pcd)
+        if output_only is False:
+            if output_filepath is not None:
+                o3d.io.write_point_cloud(filename=output_filepath, pointcloud=pcd)
+            else:
+                o3d.visualization.draw_geometries([pcd], window_name="Point Cloud Viewer")
         return pcd
 
 
@@ -375,8 +383,11 @@ def test():
 
     # Build the mesh
     mb = MeshBuilder(mesh_dir=mesh_dir, mesh_scale=mesh_scale)
-    mb.build_mesh(graph=graph, output_filepath="output.obj")
-    mb.build_pcd(input_object=graph, percentage=percentage, output_filepath="output.pcd")
+
+    output_filepath = "output.obj"  # None for visualization only
+    mb.build_mesh(graph=graph, output_filepath=output_filepath)
+    output_filepath = "output.pcd"  # None for visualization only
+    mb.build_pcd(input_object=graph, percentage=percentage, output_filepath=output_filepath)
 
 
 if __name__ == '__main__':

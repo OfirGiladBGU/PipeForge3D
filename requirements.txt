@@ -6,7 +6,7 @@ numpy
 tqdm
 
 # trimesh show
-pyglet
+pyglet==1.5.30  # required version < 2
 scipy
 
 # pcd save/show
