@@ -5,7 +5,7 @@ import networkx as nx
 import numpy as np
 import trimesh
 import open3d as o3d
-from typing import Callable, Union
+from typing import Callable, Union, Tuple, List
 
 
 class ConnectionTypes(Enum):
@@ -38,11 +38,11 @@ class MeshBuilder:
             6: self.hexagonal
         }
 
-    def apply_translation(self, mesh: trimesh.Trimesh, position: tuple):
+    def apply_translation(self, mesh: trimesh.Trimesh, position: Tuple[int, int, int]):
         position = np.array(position) * self.mesh_scale
         mesh.apply_translation(position)
 
-    def cap(self, position: tuple, connections: list):
+    def cap(self, position: Tuple[int, int, int], connections: List[str]) -> trimesh.Trimesh:
         mesh = self.pipe_meshes[ConnectionTypes.Cap].copy()
 
         # Rotation (In the origin)
@@ -69,7 +69,7 @@ class MeshBuilder:
         self.apply_translation(mesh=mesh, position=position)
         return mesh
 
-    def coupler_or_elbow(self, position: tuple, connections: list):
+    def coupler_or_elbow(self, position: Tuple[int, int, int], connections: List[str]) -> trimesh.Trimesh:
         if connections[0].strip("-") == connections[1].strip("-"):  # Coupler
             mesh = self.pipe_meshes[ConnectionTypes.Coupler].copy()
 
@@ -127,7 +127,7 @@ class MeshBuilder:
         self.apply_translation(mesh=mesh, position=position)
         return mesh
 
-    def tee_or_three_way_elbow(self, position: tuple, connections: list):
+    def tee_or_three_way_elbow(self, position: Tuple[int, int, int], connections: List[str]) -> trimesh.Trimesh:
         stripped_connections = set([connection.strip("-") for connection in connections])
         if not {"x", "y", "z"}.issubset(stripped_connections):  # Tee
             mesh = self.pipe_meshes[ConnectionTypes.Tee].copy()
@@ -206,7 +206,7 @@ class MeshBuilder:
         self.apply_translation(mesh=mesh, position=position)
         return mesh
 
-    def cross_or_four_way_tee(self, position: tuple, connections: list):
+    def cross_or_four_way_tee(self, position: Tuple[int, int, int], connections: List[str]) -> trimesh.Trimesh:
         stripped_connections = set([connection.strip("-") for connection in connections])
         if not {"x", "y", "z"}.issubset(stripped_connections):  # Cross
             mesh = self.pipe_meshes[ConnectionTypes.Cross].copy()
@@ -265,7 +265,7 @@ class MeshBuilder:
         self.apply_translation(mesh=mesh, position=position)
         return mesh
 
-    def five_way_tee(self, position: tuple, connections: list):
+    def five_way_tee(self, position: Tuple[int, int, int], connections: List[str]) -> trimesh.Trimesh:
         mesh = self.pipe_meshes[ConnectionTypes.FiveWayTee].copy()
 
         # Rotation (In the origin)
@@ -292,7 +292,7 @@ class MeshBuilder:
         self.apply_translation(mesh=mesh, position=position)
         return mesh
 
-    def hexagonal(self, position: tuple, connections: list):
+    def hexagonal(self, position: Tuple[int, int, int], connections: List[str]) -> trimesh.Trimesh:
         mesh = self.pipe_meshes[ConnectionTypes.Hexagonal].copy()
 
         if not {"x", "-x", "y", "-y", "z", "-z"}.issubset(connections):

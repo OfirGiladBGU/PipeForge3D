@@ -1,6 +1,6 @@
 import os
 import pathlib
-from typing import Union
+from typing import Union, List, Tuple
 from tqdm import tqdm
 
 from graph_generator import GraphGenerator
@@ -15,7 +15,8 @@ class MeshBuilderTests:
         self.gg = GraphGenerator()
         self.mb = MeshBuilder(mesh_dir=mesh_dir, mesh_scale=mesh_scale)
 
-    def build_test_mesh(self, positions: list, active_connection_lists: list, output_filepath: str):
+    def build_test_mesh(self, positions: List[Tuple[int, int, int]], active_connection_lists: List[List[str]],
+                        output_filepath: str):
         # Build nodes_data
         nodes_data = {}
         num_of_nodes = len(positions)

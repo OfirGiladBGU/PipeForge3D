@@ -3,6 +3,7 @@ import random
 from collections import deque
 import networkx as nx
 import matplotlib.pyplot as plt
+from typing import Tuple, List
 
 
 class GraphGenerator:
@@ -19,7 +20,7 @@ class GraphGenerator:
     #####################
     # Utility functions #
     #####################
-    def get_random_min_num_of_connections(self):
+    def get_random_min_num_of_connections(self) -> int:
         min_num_of_connections = random.choices(
             population=self.available_num_of_connections,
             weights=self.num_of_connections_probabilities,
@@ -27,7 +28,7 @@ class GraphGenerator:
         )
         return min_num_of_connections[0]
 
-    def get_opposite_connection_type(self, connection_type: str):
+    def get_opposite_connection_type(self, connection_type: str) -> str:
         if connection_type not in self.connection_types:
             raise ValueError(f"Invalid connection type: {connection_type}")
 
@@ -38,7 +39,8 @@ class GraphGenerator:
         return opposite_connection_type
 
     @staticmethod
-    def get_connection_type_node_position(node_position: tuple, connection_type: str):
+    def get_connection_type_node_position(node_position: Tuple[int, int, int],
+                                          connection_type: str) -> Tuple[int, int, int]:
         deltas = {
             "x": (1, 0, 0),
             "-x": (-1, 0, 0),
@@ -52,12 +54,13 @@ class GraphGenerator:
             raise ValueError(f"Invalid connection type: {connection_type}")
 
         dx, dy, dz = deltas[connection_type]
-        return node_position[0] + dx, node_position[1] + dy, node_position[2] + dz
+        connection_type_node_position = (node_position[0] + dx, node_position[1] + dy, node_position[2] + dz)
+        return connection_type_node_position
 
     def get_node_active_and_invalid_connection_lists(self,
-                                                     node_position: tuple,
+                                                     node_position: Tuple[int, int, int],
                                                      nodes_data: dict,
-                                                     position_to_node_map: dict) -> tuple:
+                                                     position_to_node_map: dict) -> Tuple[List[str], List[str]]:
         active_connection_list = []
         invalid_connection_list = []
 
@@ -81,8 +84,8 @@ class GraphGenerator:
 
     def get_random_new_connection_types(self,
                                         min_num_of_connections: int,
-                                        active_connection_list: list,
-                                        invalid_connection_list: list) -> list:
+                                        active_connection_list: List[str],
+                                        invalid_connection_list: List[str]) -> List[str]:
         selectable_connection = set(self.connection_types) - set(active_connection_list) - set(invalid_connection_list)
         selectable_connection = list(selectable_connection)
 
