@@ -315,9 +315,9 @@ class MeshBuilder:
         connections_dict = nx.get_node_attributes(graph, "connections")
 
         mesh_list = []
-        for i in range(len(graph.nodes)):
-            position_i = position_dict[i]
-            connections_i = connections_dict[i]
+        for node_i in list(position_dict.keys()):
+            position_i = position_dict[node_i]
+            connections_i = connections_dict[node_i]
             num_of_connections = len(connections_i)
 
             if num_of_connections not in self.connections_cases:
@@ -355,7 +355,7 @@ class MeshBuilder:
         pcd.points = o3d.utility.Vector3dVector(points)
         if output_only is False:
             if output_filepath is not None:
-                o3d.io.write_point_cloud(filename=output_filepath, pointcloud=pcd)
+                o3d.io.write_point_cloud(filename=output_filepath, pointcloud=pcd, write_ascii=True)
             else:
                 o3d.visualization.draw_geometries([pcd], window_name="Point Cloud Viewer")
         return pcd

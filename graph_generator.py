@@ -142,6 +142,8 @@ class GraphGenerator:
         current_num_of_nodes += 1
 
         for node_idx in range(num_of_nodes):
+            node_idx = str(node_idx)
+
             # Check if there are no more nodes that can be added
             if not node_positions_queue:
                 break
@@ -190,11 +192,17 @@ class GraphGenerator:
                     current_num_of_nodes += 1
 
         if output_filepath is not None:
+            # Notice: Cast the node positions to list to save them in the json file
+            for node_idx, node_data in nodes_data.items():
+                nodes_data[node_idx]["position"] = list(node_data["position"])
             with open(output_filepath, "w") as fp:
                 json.dump(obj=nodes_data, fp=fp, indent=4)
         return nodes_data
 
     def generate_graph_3d(self, nodes_data: dict) -> nx.Graph:
+        # Notice: Cast the node positions to tuple to use them as keys in the dictionary (json doesn't support tuples)
+        for node_idx, node_data in nodes_data.items():
+            nodes_data[node_idx]["position"] = tuple(node_data["position"])
         position_to_node_map = {node_data["position"]: node_idx for node_idx, node_data in nodes_data.items()}
 
         graph = nx.Graph()
