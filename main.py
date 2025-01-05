@@ -9,8 +9,8 @@ from mesh_builder import MeshBuilder
 
 
 def generate_output_files(num_of_nodes: int, num_of_outputs: int, graph_scale: int,
-                          pcd_use_sample_method: bool, pcd_points_to_sample: Union[float, int],
-                          mesh_dir: str, mesh_scale: Union[int, float]):
+                          mesh_dir: str, mesh_scale: Union[int, float],
+                          pcd_use_sample_method: bool, pcd_points_to_sample: Union[float, int],):
     output_dir = os.path.join(pathlib.Path(__file__).parent, "output")
     os.makedirs(name=output_dir, exist_ok=True)
 
@@ -35,8 +35,8 @@ def generate_output_files(num_of_nodes: int, num_of_outputs: int, graph_scale: i
 
 
 def build_mesh_from_json(json_filepath: str, graph_scale: int,
-                          pcd_use_sample_method: bool, pcd_points_to_sample: Union[float, int],
-                          mesh_dir: str, mesh_scale: Union[int, float]):
+                         mesh_dir: str, mesh_scale: Union[int, float],
+                         pcd_use_sample_method: bool, pcd_points_to_sample: Union[float, int]):
     output_dir = os.path.join(pathlib.Path(__file__).parent, "from_json_output")
     os.makedirs(name=output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, pathlib.Path(json_filepath).stem)
@@ -60,25 +60,27 @@ def build_mesh_from_json(json_filepath: str, graph_scale: int,
 # Core Functions #
 ##################
 def generate_data():
-    # Generate Parameters
+    # Graph Parameters
     num_of_nodes = 30
     num_of_outputs = 20
     graph_scale = 1
-    pcd_use_sample_method = False
-    pcd_points_to_sample = 1.0
 
     # Mesh Parameters
     mesh_dir = "connection_types"
     mesh_scale = 66
 
+    # Point Cloud Parameters
+    pcd_use_sample_method = True
+    pcd_points_to_sample = 1.0
+
     generate_output_files(
         num_of_nodes=num_of_nodes,
         num_of_outputs=num_of_outputs,
         graph_scale=graph_scale,
-        pcd_use_sample_method=pcd_use_sample_method,
-        pcd_points_to_sample=pcd_points_to_sample,
         mesh_dir=mesh_dir,
-        mesh_scale=mesh_scale
+        mesh_scale=mesh_scale,
+        pcd_use_sample_method=pcd_use_sample_method,
+        pcd_points_to_sample=pcd_points_to_sample
     )
 
 
@@ -86,22 +88,24 @@ def build_data_from_json():
     # JSON Parameters
     json_filepath = "output/01.json"
 
-    # Generate Parameters
+    # Graph Parameters
     graph_scale = 1
-    pcd_use_sample_method = False
-    pcd_points_to_sample = 1.0
 
     # Mesh Parameters
     mesh_dir = "connection_types"
     mesh_scale = 66
 
+    # Point Cloud Parameters
+    pcd_use_sample_method = True
+    pcd_points_to_sample = 1.0
+
     build_mesh_from_json(
         json_filepath=json_filepath,
         graph_scale=graph_scale,
-        pcd_use_sample_method=pcd_use_sample_method,
-        pcd_points_to_sample=pcd_points_to_sample,
         mesh_dir=mesh_dir,
-        mesh_scale=mesh_scale
+        mesh_scale=mesh_scale,
+        pcd_use_sample_method=pcd_use_sample_method,
+        pcd_points_to_sample=pcd_points_to_sample
     )
 
 
