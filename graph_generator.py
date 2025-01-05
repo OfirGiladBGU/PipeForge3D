@@ -128,10 +128,45 @@ class GraphGenerator:
 
         return new_connection_types
 
+    def resolve_node_cycles(self, node_position: Tuple[int, int, int],
+                            active_connection_list: List[str], invalid_connection_list: List[str],
+                            position_to_node_map: dict, nodes_data: dict) -> Tuple[List[str], List[str]]:
+        # Check if the node has more than one active connection
+        if len(active_connection_list) > 1:
+            # Randomly select a connection to keep
+            new_active_connection_list = random.choices(
+                population=active_connection_list,
+                k=1
+            )
+
+            # Move the disabled connections to the invalid connections
+            disabled_connection_list = list(set(active_connection_list) - set(new_active_connection_list))
+            active_connection_list = new_active_connection_list
+            for connection_type in disabled_connection_list:
+                # Add the connection to the invalid connections
+                invalid_connection_list.append(connection_type)
+
+                # Remove the connection from the neighbor node
+                neighbor_node_position = self.get_connection_type_node_position(
+                    node_position=node_position,
+                    connection_type=connection_type
+                )
+                neighbor_node_idx = position_to_node_map.get(neighbor_node_position, -1)
+                if neighbor_node_idx != -1:
+                    neighbor_connection_type = self.get_opposite_connection_type(connection_type=connection_type)
+                    nodes_data[neighbor_node_idx]["active_connection_list"].remove(neighbor_connection_type)
+                    nodes_data[neighbor_node_idx]["invalid_connection_list"].append(neighbor_connection_type)
+                else:
+                    raise ValueError(f"[BUG] Neighbor node index: {neighbor_node_idx} should exists!")
+        else:
+            pass
+
+        return active_connection_list, invalid_connection_list
+
     ######################
     # Building functions #
     ######################
-    def generate_random_3d_nodes_data(self, num_of_nodes: int, output_filepath=None) -> dict:
+    def generate_random_3d_nodes_data(self, num_of_nodes: int, tree_mode: bool = False, output_filepath=None) -> dict:
         current_num_of_nodes = 0
         nodes_data = {}
         position_to_node_map = {}
@@ -156,6 +191,15 @@ class GraphGenerator:
                 nodes_data=nodes_data,
                 position_to_node_map=position_to_node_map
             )
+
+            if tree_mode is True:
+                active_connection_list, invalid_connection_list = self.resolve_node_cycles(
+                    node_position=node_position,
+                    active_connection_list=active_connection_list,
+                    invalid_connection_list=invalid_connection_list,
+                    position_to_node_map=position_to_node_map,
+                    nodes_data=nodes_data
+                )
 
             # Set new connections to the node
             new_connection_types = self.get_random_new_connection_types(
@@ -266,10 +310,11 @@ def test():
     # Parameters
     num_of_nodes = 20
     scale = 1
+    tree_mode = True
 
     # Generate and plot the graph
     gg = GraphGenerator()
-    nodes_data = gg.generate_random_3d_nodes_data(num_of_nodes=num_of_nodes)
+    nodes_data = gg.generate_random_3d_nodes_data(num_of_nodes=num_of_nodes, tree_mode=tree_mode)
     graph = gg.generate_graph_3d(nodes_data=nodes_data)
     gg.plot_graph_3d(graph=graph, scale=scale)
 
