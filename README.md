@@ -13,11 +13,12 @@ using the available kit of connection types meshes.
 1. Go to the [main.py](main.py) script and update the parameters of the `generate_data` function to your needs:
    1. `num_of_nodes` - the number of nodes in the random graph (each node represents a pipe connection).
    2. `num_of_outputs` - number of output pipe models to generate.
-   3. `graph_scale` - the scale length of the edges in the output graph `.png` images.
-   4. `mesh_dir` - the directory of the 3D mesh parts to use to build the mesh.
-   5. `mesh_scale` - the scale length of the 3D mesh parts `.obj` files (for example: `Coupler` length).
-   6. `pcd_use_sample_method` - whether to use the surface sample method or take the mesh points to generate the point cloud file.
-   7. `pcd_points_to_sample` - the `percentage` or `number` of points to sample from the output 3D mesh to convert to a point cloud file.
+   3. `tree_mode` - whether to prohibit cycles creation on the graph (tree graph) or not.
+   4. `graph_scale` - the scale length of the edges in the output graph `.png` images.
+   5. `mesh_dir` - the directory of the 3D mesh parts to use to build the mesh.
+   6. `mesh_scale` - the scale length of the 3D mesh parts `.obj` files (for example: `Coupler` length).
+   7. `pcd_use_sample_method` - whether to use the surface sample method or take the mesh points to generate the point cloud file.
+   8. `pcd_points_to_sample` - the `percentage` or `number` of points to sample from the output 3D mesh to convert to a point cloud file.
 2. Run the script:
    ```bash
    python main.py
