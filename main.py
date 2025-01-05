@@ -83,6 +83,9 @@ def generate_data():
     )
 
 def build_data_from_json():
+    # JSON Parameters
+    json_filepath = "output/01.json"
+
     # Generate Parameters
     graph_scale = 1
     pcd_use_sample_method = False
@@ -91,7 +94,7 @@ def build_data_from_json():
     # Mesh Parameters
     mesh_dir = "connection_types"
     mesh_scale = 66
-    json_filepath = "output/01.json"
+
     build_mesh_from_json(
         json_filepath=json_filepath,
         graph_scale=graph_scale,
