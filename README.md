@@ -10,7 +10,7 @@ using the available kit of connection types meshes.
 
 ## Getting Started
 
-1. Go to the [main.py](main.py) script and update the parameters of the `generate_pipes` function to your needs:
+1. Go to the [main.py](main.py) script and update the parameters of the `generate_data` function to your needs:
    1. `num_of_nodes` - the number of nodes in the random graph (each node represents a pipe connection).
    2. `num_of_outputs` - number of output pipes to generate.
    3. `graph_scale` - the scale of the output graph `.png` images. 
