@@ -41,8 +41,8 @@ def build_mesh_from_json(json_filepath: str, graph_scale: int,
     os.makedirs(name=output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, pathlib.Path(json_filepath).stem)
 
-    with open(json_filepath, "r") as f:
-        nodes_data = json.load(f)
+    with open(json_filepath, "r") as fp:
+        nodes_data = json.load(fp=fp)
 
     gg = GraphGenerator()
     graph = gg.generate_graph_3d(nodes_data=nodes_data)
@@ -58,7 +58,7 @@ def build_mesh_from_json(json_filepath: str, graph_scale: int,
 
 def generate_data():
     # Generate Parameters
-    num_of_nodes = 50
+    num_of_nodes = 30
     num_of_outputs = 20
     graph_scale = 1
     pcd_use_sample_method = False
