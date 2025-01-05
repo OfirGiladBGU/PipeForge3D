@@ -11,11 +11,15 @@ class GraphGenerator:
         # Parameters
         self.available_num_of_connections = [1, 2, 3, 4, 5, 6]
         self.num_of_connections_probabilities = [0.05, 0.5, 0.2, 0.1, 0.10, 0.05]
+        self.connection_types = ["x", "-x", "y", "-y", "z", "-z"]
+
+        # Special cases parameters
+        self.allow_special_cases = True
         self.coupler_elbow_probabilities = [0.8, 0.2]
         # TODO: Implement probabilities for the following connection types
         # self.tee_or_three_way_elbow_probabilities = [0.8, 0.2]
         # self.four_way_tee_or_four_way_elbow_probabilities = [0.8, 0.2]
-        self.connection_types = ["x", "-x", "y", "-y", "z", "-z"]
+
 
     #####################
     # Utility functions #
@@ -82,26 +86,10 @@ class GraphGenerator:
 
         return active_connection_list, invalid_connection_list
 
-    def get_random_new_connection_types(self,
-                                        min_num_of_connections: int,
-                                        active_connection_list: List[str],
-                                        invalid_connection_list: List[str]) -> List[str]:
-        selectable_connection = set(self.connection_types) - set(active_connection_list) - set(invalid_connection_list)
-        selectable_connection = list(selectable_connection)
-
-        num_of_selectable_connections = len(selectable_connection)
-        num_of_choices_available = min_num_of_connections - len(active_connection_list)
-
-        # Min number of connections reached
-        if num_of_choices_available <= 0:
-            new_connection_types = []
-
-        # Not enough selectable connections to reach min number of connections
-        elif num_of_choices_available > num_of_selectable_connections:
-            new_connection_types = selectable_connection
-
-        # (Optional) Special case: select between Coupler and Elbow connection types
-        elif num_of_choices_available == 1 and len(active_connection_list) == 1:
+    def handle_special_cases(self, active_connection_list: List[str], selectable_connection: List[str],
+                             num_of_choices_available: int, num_of_selectable_connections: int) -> List[str]:
+        # Special case: select between Coupler and Elbow connection types
+        if num_of_choices_available == 1 and len(active_connection_list) == 1:
             opposite_connection = self.get_opposite_connection_type(connection_type=active_connection_list[0])
 
             # Check if an opposite connection and at least one other connection are selectable
@@ -121,6 +109,41 @@ class GraphGenerator:
             # Either Coupler or Elbow connection is only selectable
             else:
                 new_connection_types = random.sample(population=selectable_connection, k=1)
+
+        # Special case: select between Tee or Three Way Elbow connection types
+
+        # Special case: select between Four Way Tee or Four Way Elbow connection types
+
+        else:
+            new_connection_types = random.sample(population=selectable_connection, k=num_of_choices_available)
+
+        return new_connection_types
+
+    def get_random_new_connection_types(self,
+                                        min_num_of_connections: int,
+                                        active_connection_list: List[str],
+                                        invalid_connection_list: List[str]) -> List[str]:
+        selectable_connection = set(self.connection_types) - set(active_connection_list) - set(invalid_connection_list)
+        selectable_connection = list(selectable_connection)
+
+        num_of_selectable_connections = len(selectable_connection)
+        num_of_choices_available = min_num_of_connections - len(active_connection_list)
+
+        # Min number of connections reached
+        if num_of_choices_available <= 0:
+            new_connection_types = []
+
+        # Not enough selectable connections to reach min number of connections
+        elif num_of_choices_available > num_of_selectable_connections:
+            new_connection_types = selectable_connection
+
+        elif self.allow_special_cases is True:
+            new_connection_types = self.handle_special_cases(
+                active_connection_list=active_connection_list,
+                selectable_connection=selectable_connection,
+                num_of_selectable_connections=num_of_selectable_connections,
+                num_of_choices_available=num_of_choices_available,
+            )
 
         # Randomly select new connections to reach min number of connections
         else:
