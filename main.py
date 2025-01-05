@@ -56,6 +56,9 @@ def build_mesh_from_json(json_filepath: str, graph_scale: int,
                        output_filepath=f"{output_path}.pcd")
 
 
+##################
+# Core Functions #
+##################
 def generate_data():
     # Generate Parameters
     num_of_nodes = 30
@@ -78,6 +81,7 @@ def generate_data():
         mesh_scale=mesh_scale
     )
 
+
 def build_data_from_json():
     # JSON Parameters
     json_filepath = "output/01.json"
@@ -99,6 +103,7 @@ def build_data_from_json():
         mesh_dir=mesh_dir,
         mesh_scale=mesh_scale
     )
+
 
 def main():
     generate_data()
