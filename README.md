@@ -33,4 +33,9 @@ using the available kit of connection types meshes.
 - `Visualizer` ([visualizer.py](visualizer.py)) - a tool to visualize the graph, 3D mesh and point cloud of a pipes model.
 
 
+## Configuring Matplotlib Plots to Display in a Window in PyCharm
+
+See the following question on [Stack Overflow](https://stackoverflow.com/questions/57015206/how-to-show-matplotlib-plots-in-a-window-instead-of-sciview-toolbar-in-pycharm-p).
+
+
 ## Examples
