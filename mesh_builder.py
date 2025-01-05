@@ -338,7 +338,8 @@ class MeshBuilder:
         return combined_mesh
 
     def build_pcd(self, input_object: Union[nx.Graph, trimesh.Trimesh],
-                  percentage: float = 0.001,
+                  use_sample_method: bool = True,
+                  points_to_sample: Union[float, int] = 1.0,
                   output_filepath=None,
                   output_only: bool = False) -> o3d.geometry.PointCloud:
         if isinstance(input_object, nx.Graph):
@@ -348,8 +349,17 @@ class MeshBuilder:
         else:
             raise ValueError("Invalid input object")
 
-        count = int(len(mesh.vertices) * percentage)
-        points = mesh.sample(count=count)
+        if use_sample_method is True:
+            # If float, sample the percentage of the points
+            if isinstance(points_to_sample, float):
+                percentage = points_to_sample
+                count = int(len(mesh.vertices) * percentage)
+            # If int, sample the number of points
+            else:
+                count = points_to_sample
+            points = mesh.sample(count=count)
+        else:
+            points = mesh.vertices
 
         pcd = o3d.geometry.PointCloud()
         pcd.points = o3d.utility.Vector3dVector(points)
@@ -370,7 +380,8 @@ def test():
     # Parameters
     num_of_nodes = 20
     scale = 1
-    percentage = 1.0
+    use_sample_method = True
+    points_to_sample = 1.0
 
     mesh_dir = "connection_types"
     mesh_scale = 66
@@ -387,7 +398,8 @@ def test():
     output_filepath = "output.obj"  # None for visualization only
     mb.build_mesh(graph=graph, output_filepath=output_filepath)
     output_filepath = "output.pcd"  # None for visualization only
-    mb.build_pcd(input_object=graph, percentage=percentage, output_filepath=output_filepath)
+    mb.build_pcd(input_object=graph, use_sample_method=use_sample_method, points_to_sample=points_to_sample,
+                 output_filepath=output_filepath)
 
 
 if __name__ == '__main__':
