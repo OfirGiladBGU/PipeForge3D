@@ -26,6 +26,7 @@ using the available kit of connection types meshes.
 - `GraphGenerator` ([graph_generator.py](graph_generator.py)) - generates a random graph of the pipes model.
 - `MeshBuilder` ([mesh_builder.py](mesh_builder.py)) - build the 3D mesh and point cloud of the pipes model from a given graph.
 - `MeshBuilderTests` ([mesh_builder_tests.py](mesh_builder_tests.py)) - unit tests for the `MeshBuilder` class using the available kit of connection types meshes.
+- `Visualizer` ([visualizer.py](visualizer.py)) - a tool to visualize the graph, 3D mesh and point cloud of a pipes model.
 
 
 ## Examples
