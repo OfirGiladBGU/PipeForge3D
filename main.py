@@ -23,10 +23,6 @@ def generate_output_files(num_of_nodes: int, num_of_outputs: int, graph_scale: i
         # Generate the graph
         nodes_data = gg.generate_random_3d_nodes_data(num_of_nodes=num_of_nodes, output_filepath=f"{output_path}.json")
 
-        # DEBUG: Load the nodes data from the file
-        # with open(f"{output_path}.json", "r") as f:
-        #     nodes_data = json.load(f)
-
         graph = gg.generate_graph_3d(nodes_data=nodes_data)
         gg.plot_graph_3d(graph=graph, scale=graph_scale, output_filepath=f"{output_path}.png")
 
