@@ -21,9 +21,10 @@ class ConnectionTypes(Enum):
 
 
 class MeshBuilder:
-    def __init__(self, mesh_dir: str, mesh_scale: Union[int, float]):
+    def __init__(self, mesh_dir: str, mesh_scale: Union[int, float], mesh_apply_scale: float = 1.0):
         self.pipe_meshes_path = os.path.join(pathlib.Path(__file__).parent, mesh_dir)
         self.mesh_scale = mesh_scale
+        self.mesh_apply_scale = mesh_apply_scale
         self.pipe_meshes = {}
         for connection_type in ConnectionTypes:
             pipe_mesh_path = os.path.join(self.pipe_meshes_path, connection_type.value)
@@ -330,6 +331,8 @@ class MeshBuilder:
                 mesh_list.append(mesh)
 
         combined_mesh: trimesh.Trimesh = trimesh.util.concatenate(mesh_list)
+        if self.mesh_apply_scale != 1.0:
+            combined_mesh.apply_scale(self.mesh_apply_scale)
         if output_only is False:
             if output_filepath is not None:
                 combined_mesh.export(file_obj=output_filepath)
@@ -385,6 +388,7 @@ def test():
 
     mesh_dir = "connection_types"
     mesh_scale = 66
+    mesh_apply_scale = 1.0
 
     # Generate and plot the graph
     gg = GraphGenerator()
@@ -393,7 +397,7 @@ def test():
     gg.plot_graph_3d(graph=graph, scale=scale, output_filepath="output.png")
 
     # Build the mesh
-    mb = MeshBuilder(mesh_dir=mesh_dir, mesh_scale=mesh_scale)
+    mb = MeshBuilder(mesh_dir=mesh_dir, mesh_scale=mesh_scale, mesh_apply_scale=mesh_apply_scale)
 
     output_filepath = "output.obj"  # None for visualization only
     mb.build_mesh(graph=graph, output_filepath=output_filepath)

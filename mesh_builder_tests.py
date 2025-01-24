@@ -11,9 +11,9 @@ from mesh_builder import MeshBuilder
 # Tests #
 #########
 class MeshBuilderTests:
-    def __init__(self, mesh_dir: str, mesh_scale: Union[int, float]):
+    def __init__(self, mesh_dir: str, mesh_scale: Union[int, float], mesh_apply_scale: float):
         self.gg = GraphGenerator()
-        self.mb = MeshBuilder(mesh_dir=mesh_dir, mesh_scale=mesh_scale)
+        self.mb = MeshBuilder(mesh_dir=mesh_dir, mesh_scale=mesh_scale, mesh_apply_scale=mesh_apply_scale)
 
     def build_test_mesh(self, positions: List[Tuple[int, int, int]], active_connection_lists: List[List[str]],
                         output_filepath: str):
@@ -394,8 +394,9 @@ def main():
     # Mesh Parameters
     mesh_dir = "connection_types"
     mesh_scale = 66
+    mesh_apply_scale = 1.0
 
-    mbt = MeshBuilderTests(mesh_dir=mesh_dir, mesh_scale=mesh_scale)
+    mbt = MeshBuilderTests(mesh_dir=mesh_dir, mesh_scale=mesh_scale, mesh_apply_scale=mesh_apply_scale)
     mbt.tests()
 
 

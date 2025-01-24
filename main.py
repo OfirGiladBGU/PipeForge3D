@@ -9,7 +9,7 @@ from mesh_builder import MeshBuilder
 
 
 def generate_output_files(num_of_nodes: int, num_of_outputs: int, tree_mode: bool, graph_scale: int,
-                          mesh_dir: str, mesh_scale: Union[int, float],
+                          mesh_dir: str, mesh_scale: Union[int, float], mesh_apply_scale: float,
                           pcd_use_sample_method: bool, pcd_points_to_sample: Union[float, int],):
     output_dir = os.path.join(pathlib.Path(__file__).parent, "output")
     os.makedirs(name=output_dir, exist_ok=True)
@@ -31,7 +31,7 @@ def generate_output_files(num_of_nodes: int, num_of_outputs: int, tree_mode: boo
         gg.plot_graph_3d(graph=graph, scale=graph_scale, output_filepath=f"{output_path}.png")
 
         # Build the mesh and point cloud
-        mb = MeshBuilder(mesh_dir=mesh_dir, mesh_scale=mesh_scale)
+        mb = MeshBuilder(mesh_dir=mesh_dir, mesh_scale=mesh_scale, mesh_apply_scale=mesh_apply_scale)
         mesh = mb.build_mesh(graph=graph, output_filepath=f"{output_path}.obj")
         pcd = mb.build_pcd(
             input_object=mesh,
@@ -42,7 +42,7 @@ def generate_output_files(num_of_nodes: int, num_of_outputs: int, tree_mode: boo
 
 
 def build_mesh_from_json(json_filepath: str, graph_scale: int,
-                         mesh_dir: str, mesh_scale: Union[int, float],
+                         mesh_dir: str, mesh_scale: Union[int, float], mesh_apply_scale: float,
                          pcd_use_sample_method: bool, pcd_points_to_sample: Union[float, int]):
     output_dir = os.path.join(pathlib.Path(__file__).parent, "from_json_output")
     os.makedirs(name=output_dir, exist_ok=True)
@@ -56,7 +56,7 @@ def build_mesh_from_json(json_filepath: str, graph_scale: int,
     gg.plot_graph_3d(graph=graph, scale=graph_scale, output_filepath=f"{output_path}.png")
 
     # Build the mesh and point cloud
-    mb = MeshBuilder(mesh_dir=mesh_dir, mesh_scale=mesh_scale)
+    mb = MeshBuilder(mesh_dir=mesh_dir, mesh_scale=mesh_scale, mesh_apply_scale=mesh_apply_scale)
     mesh = mb.build_mesh(graph=graph, output_filepath=f"{output_path}.obj")
     pcd = mb.build_pcd(
         input_object=mesh,
@@ -79,6 +79,7 @@ def generate_data():
     # Mesh Parameters
     mesh_dir = "connection_types"
     mesh_scale = 66
+    mesh_apply_scale = 1.0
 
     # Point Cloud Parameters
     pcd_use_sample_method = True
@@ -91,6 +92,7 @@ def generate_data():
         graph_scale=graph_scale,
         mesh_dir=mesh_dir,
         mesh_scale=mesh_scale,
+        mesh_apply_scale=mesh_apply_scale,
         pcd_use_sample_method=pcd_use_sample_method,
         pcd_points_to_sample=pcd_points_to_sample
     )
@@ -106,6 +108,7 @@ def build_data_from_json():
     # Mesh Parameters
     mesh_dir = "connection_types"
     mesh_scale = 66
+    mesh_apply_scale = 1.0
 
     # Point Cloud Parameters
     pcd_use_sample_method = True
@@ -116,6 +119,7 @@ def build_data_from_json():
         graph_scale=graph_scale,
         mesh_dir=mesh_dir,
         mesh_scale=mesh_scale,
+        mesh_apply_scale=mesh_apply_scale,
         pcd_use_sample_method=pcd_use_sample_method,
         pcd_points_to_sample=pcd_points_to_sample
     )
