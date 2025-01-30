@@ -322,6 +322,7 @@ class GraphGenerator:
 
         if output_filepath is not None:
             plt.savefig(output_filepath)
+            plt.close(fig)
         else:
             plt.show()
 
