@@ -3,10 +3,9 @@
 
 ## Description
 
-This project is a Python tool for generation and construction of 3D pipes for industrial applications. \
-The tool allows to **forge** 3D mesh models and point clouds of pipes, from graphs of pipe connections, 
-from both generated random graphs and given graphs in designated `json` format, 
-by using the available kit of connection types meshes.
+This project is a Python tool for generation and construction of `3D pipes` for industrial applications. \
+The tool allows to `forge` 3D mesh models and point clouds of pipes, from both generated random graphs and 
+given graphs in `json` format (see below) of pipe connections, using the available kit of connection types meshes.
 
 
 ## Getting Started
