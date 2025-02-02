@@ -8,9 +8,15 @@ from graph_generator import GraphGenerator
 from mesh_builder import MeshBuilder
 
 
-def generate_output_files(num_of_nodes: int, num_of_outputs: int, tree_mode: bool, graph_scale: int,
-                          mesh_dir: str, mesh_scale: Union[int, float], mesh_apply_scale: float,
-                          pcd_use_sample_method: bool, pcd_points_to_sample: Union[float, int],):
+def generate_output_files(num_of_nodes: int,
+                          num_of_outputs: int,
+                          tree_mode: bool,
+                          graph_scale: int,
+                          mesh_dir: str,
+                          mesh_scale: Union[int, float],
+                          mesh_apply_scale: float,
+                          pcd_use_sample_method: bool,
+                          pcd_points_to_sample: Union[float, int]):
     output_dir = os.path.join(pathlib.Path(__file__).parent, "output")
     os.makedirs(name=output_dir, exist_ok=True)
 
@@ -41,9 +47,13 @@ def generate_output_files(num_of_nodes: int, num_of_outputs: int, tree_mode: boo
         )
 
 
-def build_mesh_from_json(json_filepath: str, graph_scale: int,
-                         mesh_dir: str, mesh_scale: Union[int, float], mesh_apply_scale: float,
-                         pcd_use_sample_method: bool, pcd_points_to_sample: Union[float, int]):
+def build_mesh_from_json(json_filepath: str,
+                         graph_scale: int,
+                         mesh_dir: str,
+                         mesh_scale: Union[int, float],
+                         mesh_apply_scale: float,
+                         pcd_use_sample_method: bool,
+                         pcd_points_to_sample: Union[float, int]):
     output_dir = os.path.join(pathlib.Path(__file__).parent, "from_json_output")
     os.makedirs(name=output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, pathlib.Path(json_filepath).stem)

@@ -1,11 +1,12 @@
-# Pipes3DGenerator
+# Pipe Forge 3D
 
 
 ## Description
 
-This project is a Python 3D pipes generator for industrial applications. \
-The script generates random graphs that can be converted into 3D models and point clouds of pipes, 
-using the available kit of connection types meshes.
+This project is a Python tool for generation and construction of 3D pipes for industrial applications. \
+The tool allows to **forge** 3D mesh models and point clouds of pipes, from graphs of pipe connections, 
+from both generated random graphs and given graphs in designated `json` format, 
+by using the available kit of connection types meshes.
 
 
 ## Getting Started
@@ -25,6 +26,31 @@ using the available kit of connection types meshes.
    python main.py
    ```
 
+
+## JSON Graph Format
+
+The graph is represented in a `json` format, where each node is a dictionary with the following keys:
+```json
+{
+    "0": {  // node id
+        "position": [
+            0,  // x
+            0,  // y
+            0   // z
+        ],
+        "opened_connection_list": [
+            "x",  // connectable axis from position
+            "-x"
+        ],
+        "closed_connection_list": [
+            "y",  // non connectable axis from position
+            "-y",
+            "z",
+            "-z"
+        ]
+    }
+}
+```
 
 ## Classes Breakdown
 

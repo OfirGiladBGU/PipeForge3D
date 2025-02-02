@@ -61,12 +61,12 @@ class GraphGenerator:
         connection_type_node_position = (node_position[0] + dx, node_position[1] + dy, node_position[2] + dz)
         return connection_type_node_position
 
-    def get_node_active_and_invalid_connection_lists(self,
-                                                     node_position: Tuple[int, int, int],
-                                                     nodes_data: dict,
-                                                     position_to_node_map: dict) -> Tuple[List[str], List[str]]:
-        active_connection_list = []
-        invalid_connection_list = []
+    def get_node_opened_and_closed_connection_lists(self,
+                                                    node_position: Tuple[int, int, int],
+                                                    nodes_data: dict,
+                                                    position_to_node_map: dict) -> Tuple[List[str], List[str]]:
+        opened_connection_list = []
+        closed_connection_list = []
 
         for connection_type in self.connection_types:
             neighbor_node_position = self.get_connection_type_node_position(
@@ -78,19 +78,22 @@ class GraphGenerator:
             if neighbor_node_idx != -1:
                 neighbor_connection_type = self.get_opposite_connection_type(connection_type=connection_type)
 
-                if neighbor_connection_type in nodes_data[neighbor_node_idx]["active_connection_list"]:
-                    active_connection_list.append(connection_type)
+                if neighbor_connection_type in nodes_data[neighbor_node_idx]["opened_connection_list"]:
+                    opened_connection_list.append(connection_type)
 
-                if neighbor_connection_type in nodes_data[neighbor_node_idx]["invalid_connection_list"]:
-                    invalid_connection_list.append(connection_type)
+                if neighbor_connection_type in nodes_data[neighbor_node_idx]["closed_connection_list"]:
+                    closed_connection_list.append(connection_type)
 
-        return active_connection_list, invalid_connection_list
+        return opened_connection_list, closed_connection_list
 
-    def handle_special_cases(self, active_connection_list: List[str], selectable_connection: List[str],
-                             num_of_choices_available: int, num_of_selectable_connections: int) -> List[str]:
+    def handle_special_cases(self,
+                             opened_connection_list: List[str],
+                             selectable_connection: List[str],
+                             num_of_choices_available: int,
+                             num_of_selectable_connections: int) -> List[str]:
         # Special case: select between Coupler and Elbow connection types
-        if num_of_choices_available == 1 and len(active_connection_list) == 1:
-            opposite_connection = self.get_opposite_connection_type(connection_type=active_connection_list[0])
+        if num_of_choices_available == 1 and len(opened_connection_list) == 1:
+            opposite_connection = self.get_opposite_connection_type(connection_type=opened_connection_list[0])
 
             # Check if an opposite connection and at least one other connection are selectable
             # (Coupler and Elbow connection types are selectable)
@@ -121,13 +124,13 @@ class GraphGenerator:
 
     def get_random_new_connection_types(self,
                                         min_num_of_connections: int,
-                                        active_connection_list: List[str],
-                                        invalid_connection_list: List[str]) -> List[str]:
-        selectable_connection = set(self.connection_types) - set(active_connection_list) - set(invalid_connection_list)
+                                        opened_connection_list: List[str],
+                                        closed_connection_list: List[str]) -> List[str]:
+        selectable_connection = set(self.connection_types) - set(opened_connection_list) - set(closed_connection_list)
         selectable_connection = list(selectable_connection)
 
         num_of_selectable_connections = len(selectable_connection)
-        num_of_choices_available = min_num_of_connections - len(active_connection_list)
+        num_of_choices_available = min_num_of_connections - len(opened_connection_list)
 
         # Min number of connections reached
         if num_of_choices_available <= 0:
@@ -139,7 +142,7 @@ class GraphGenerator:
 
         elif self.allow_special_cases is True:
             new_connection_types = self.handle_special_cases(
-                active_connection_list=active_connection_list,
+                opened_connection_list=opened_connection_list,
                 selectable_connection=selectable_connection,
                 num_of_selectable_connections=num_of_selectable_connections,
                 num_of_choices_available=num_of_choices_available,
@@ -151,23 +154,26 @@ class GraphGenerator:
 
         return new_connection_types
 
-    def resolve_node_cycles(self, node_position: Tuple[int, int, int],
-                            active_connection_list: List[str], invalid_connection_list: List[str],
-                            position_to_node_map: dict, nodes_data: dict) -> Tuple[List[str], List[str]]:
-        # Check if the node has more than one active connection
-        if len(active_connection_list) > 1:
+    def resolve_node_cycles(self,
+                            node_position: Tuple[int, int, int],
+                            opened_connection_list: List[str],
+                            closed_connection_list: List[str],
+                            position_to_node_map: dict,
+                            nodes_data: dict) -> Tuple[List[str], List[str]]:
+        # Check if the node has more than one open connection
+        if len(opened_connection_list) > 1:
             # Randomly select a connection to keep
-            new_active_connection_list = random.choices(
-                population=active_connection_list,
+            new_opened_connection_list = random.choices(
+                population=opened_connection_list,
                 k=1
             )
 
-            # Move the disabled connections to the invalid connections
-            disabled_connection_list = list(set(active_connection_list) - set(new_active_connection_list))
-            active_connection_list = new_active_connection_list
+            # Move the disabled connections to the closed connections
+            disabled_connection_list = list(set(opened_connection_list) - set(new_opened_connection_list))
+            opened_connection_list = new_opened_connection_list
             for connection_type in disabled_connection_list:
-                # Add the connection to the invalid connections
-                invalid_connection_list.append(connection_type)
+                # Add the connection to the closed connections
+                closed_connection_list.append(connection_type)
 
                 # Remove the connection from the neighbor node
                 neighbor_node_position = self.get_connection_type_node_position(
@@ -177,14 +183,14 @@ class GraphGenerator:
                 neighbor_node_idx = position_to_node_map.get(neighbor_node_position, -1)
                 if neighbor_node_idx != -1:
                     neighbor_connection_type = self.get_opposite_connection_type(connection_type=connection_type)
-                    nodes_data[neighbor_node_idx]["active_connection_list"].remove(neighbor_connection_type)
-                    nodes_data[neighbor_node_idx]["invalid_connection_list"].append(neighbor_connection_type)
+                    nodes_data[neighbor_node_idx]["opened_connection_list"].remove(neighbor_connection_type)
+                    nodes_data[neighbor_node_idx]["closed_connection_list"].append(neighbor_connection_type)
                 else:
                     raise ValueError(f"[BUG] Neighbor node index: {neighbor_node_idx} should exists!")
         else:
             pass
 
-        return active_connection_list, invalid_connection_list
+        return opened_connection_list, closed_connection_list
 
     ######################
     # Building functions #
@@ -209,17 +215,17 @@ class GraphGenerator:
             # Pop next node in queue
             node_position = node_positions_queue.popleft()
             min_num_of_connections = self.get_random_min_num_of_connections()
-            active_connection_list, invalid_connection_list = self.get_node_active_and_invalid_connection_lists(
+            opened_connection_list, closed_connection_list = self.get_node_opened_and_closed_connection_lists(
                 node_position=node_position,
                 nodes_data=nodes_data,
                 position_to_node_map=position_to_node_map
             )
 
             if tree_mode is True:
-                active_connection_list, invalid_connection_list = self.resolve_node_cycles(
+                opened_connection_list, closed_connection_list = self.resolve_node_cycles(
                     node_position=node_position,
-                    active_connection_list=active_connection_list,
-                    invalid_connection_list=invalid_connection_list,
+                    opened_connection_list=opened_connection_list,
+                    closed_connection_list=closed_connection_list,
                     position_to_node_map=position_to_node_map,
                     nodes_data=nodes_data
                 )
@@ -227,17 +233,17 @@ class GraphGenerator:
             # Set new connections to the node
             new_connection_types = self.get_random_new_connection_types(
                 min_num_of_connections=min_num_of_connections,
-                active_connection_list=active_connection_list,
-                invalid_connection_list=invalid_connection_list
+                opened_connection_list=opened_connection_list,
+                closed_connection_list=closed_connection_list
             )
 
             # Add node to graph
-            active_connection_list.extend(new_connection_types)
-            invalid_connection_list = list(set(self.connection_types) - set(active_connection_list))
+            opened_connection_list.extend(new_connection_types)
+            closed_connection_list = list(set(self.connection_types) - set(opened_connection_list))
             nodes_data[node_idx] = {
                 "position": node_position,
-                "active_connection_list": active_connection_list,
-                "invalid_connection_list": invalid_connection_list
+                "opened_connection_list": opened_connection_list,
+                "closed_connection_list": closed_connection_list
             }
             position_to_node_map[node_position] = node_idx
 
@@ -276,11 +282,11 @@ class GraphGenerator:
 
         # Add nodes
         for node_idx, node_data in nodes_data.items():
-            graph.add_node(node_idx, position=node_data["position"], connections=node_data["active_connection_list"])
+            graph.add_node(node_idx, position=node_data["position"], connections=node_data["opened_connection_list"])
 
         # Add edges
         for node_idx, node_data in nodes_data.items():
-            for connection_type in node_data["active_connection_list"]:
+            for connection_type in node_data["opened_connection_list"]:
                 neighbor_node_position = self.get_connection_type_node_position(
                     node_position=node_data["position"],
                     connection_type=connection_type
