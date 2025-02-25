@@ -3,6 +3,7 @@ import pathlib
 from typing import Union
 from tqdm import tqdm
 import json
+from concurrent.futures import ThreadPoolExecutor
 
 from graph_generator import GraphGenerator
 from mesh_builder import MeshBuilder
@@ -16,25 +17,28 @@ def generate_output_files(num_of_nodes: int,
                           mesh_scale: Union[int, float],
                           mesh_apply_scale: float,
                           pcd_use_sample_method: bool,
-                          pcd_points_to_sample: Union[float, int]):
+                          pcd_points_to_sample: Union[float, int],
+                          enable_multithreading: bool):
     output_dir = os.path.join(pathlib.Path(__file__).parent, "output")
     os.makedirs(name=output_dir, exist_ok=True)
 
     gg = GraphGenerator()
     zfill_num = len(str(num_of_outputs))
-    for i in tqdm(range(num_of_outputs)):
-        num_str_format = str(i + 1).zfill(zfill_num)
+
+    def generate_output(idx, plot_graph=True):
+        num_str_format = str(idx + 1).zfill(zfill_num)
         output_path = os.path.join(output_dir, num_str_format)
 
         # Generate the graph
         nodes_data = gg.generate_random_3d_nodes_data(
             num_of_nodes=num_of_nodes,
             tree_mode=tree_mode,
-             output_filepath=f"{output_path}.json"
+            output_filepath=f"{output_path}.json"
         )
 
         graph = gg.generate_graph_3d(nodes_data=nodes_data)
-        gg.plot_graph_3d(graph=graph, scale=graph_scale, output_filepath=f"{output_path}.png")
+        if plot_graph:
+            gg.plot_graph_3d(graph=graph, scale=graph_scale, output_filepath=f"{output_path}.png")
 
         # Build the mesh and point cloud
         mb = MeshBuilder(mesh_dir=mesh_dir, mesh_scale=mesh_scale, mesh_apply_scale=mesh_apply_scale)
@@ -45,6 +49,19 @@ def generate_output_files(num_of_nodes: int,
             points_to_sample=pcd_points_to_sample,
             output_filepath=f"{output_path}.pcd"
         )
+
+    if enable_multithreading:
+        futures = []
+        with ThreadPoolExecutor() as executor:
+            # Submit all tasks
+            for idx in range(num_of_outputs):
+                futures.append(executor.submit(generate_output, idx=idx, plot_graph=False))
+            # "Join" on all tasks by waiting for each future to complete.
+            for future in tqdm(futures, total=num_of_outputs, desc="Multithreaded generation"):
+                future.result()
+    else:
+        for idx in tqdm(range(num_of_outputs), desc="Single-threaded generation"):
+            generate_output(idx=idx, plot_graph=True)
 
 
 def build_mesh_from_json(json_filepath: str,
@@ -81,8 +98,8 @@ def build_mesh_from_json(json_filepath: str,
 ##################
 def generate_data():
     # Graph Parameters
-    num_of_nodes = 30
-    num_of_outputs = 20
+    num_of_nodes = 100
+    num_of_outputs = 50
     tree_mode = True
     graph_scale = 1
 
@@ -95,6 +112,9 @@ def generate_data():
     pcd_use_sample_method = True
     pcd_points_to_sample = 1.0
 
+    # Multithreading Parameters
+    enable_multithreading = True
+
     generate_output_files(
         num_of_nodes=num_of_nodes,
         num_of_outputs=num_of_outputs,
@@ -104,7 +124,8 @@ def generate_data():
         mesh_scale=mesh_scale,
         mesh_apply_scale=mesh_apply_scale,
         pcd_use_sample_method=pcd_use_sample_method,
-        pcd_points_to_sample=pcd_points_to_sample
+        pcd_points_to_sample=pcd_points_to_sample,
+        enable_multithreading=enable_multithreading
     )
 
 

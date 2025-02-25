@@ -20,6 +20,7 @@ given graphs in `json` format (see below) of pipe connections, using the availab
    7. `mesh_apply_scale` - the scale value to apply to the whole 3D mesh model.
    8. `pcd_use_sample_method` - whether to use the surface sample method or take the mesh points to generate the point cloud file.
    9. `pcd_points_to_sample` - the `percentage` or `number` of points to sample from the output 3D mesh to convert to a point cloud file.
+   10. `enable_multithreading` - whether to enable multithreading for the mesh building process.
 2. Run the script:
    ```bash
    python main.py
