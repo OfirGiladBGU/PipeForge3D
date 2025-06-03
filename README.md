@@ -1,5 +1,6 @@
 # Pipe Forge 3D
 
+![PipeForge3DExample](assets/PipeForge3DExample.png)
 
 ## Description
 
@@ -63,6 +64,3 @@ The graph is represented in a `json` format, where each node is a dictionary wit
 ## Configuring Matplotlib Plots to Display in a Window in PyCharm
 
 See the following question on [Stack Overflow](https://stackoverflow.com/questions/57015206/how-to-show-matplotlib-plots-in-a-window-instead-of-sciview-toolbar-in-pycharm-p).
-
-
-## Examples
